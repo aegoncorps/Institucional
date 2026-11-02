@@ -5,11 +5,12 @@ import { ArrowRight, Close, WhatsApp } from '../components/Icons'
 import { whatsappLink } from '../config'
 
 /**
- * Ato 4 — Produtos e Soluções (Stacking Cards na lateral esquerda, sobrepondo o título).
+ * Ato 4 — Produtos e Soluções (Stacking Cards com 75% de cobertura / 25% visível).
  * - Restaura a estrutura lateral original (título, subtítulo e contador à esquerda).
- * - Ao rolar a tela, o primeiro card desliza para a esquerda cobrindo o título, e cada card
- *   subsequente chega da direita e empilha exatamente por cima do anterior como um baralho.
- * - Suporta abertura da gaveta de detalhes completos e responsividade no mobile.
+ * - Ao iniciar o scroll, o Card 01 desliza para a esquerda sobrepondo o título da sidebar.
+ * - Conforme o usuário continua rolando a página (scrub), cada card subsequente chega da direita
+ *   e cobre SEMPRE 75% do card anterior, deixando um pedaço de 25% à vista como um baralho fatiado.
+ * - Suporta abertura da gaveta de detalhes completos e empilhamento sticky no mobile.
  */
 export function Products() {
   const root = useRef<HTMLElement>(null)
@@ -29,28 +30,34 @@ export function Products() {
       mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)', () => {
         const cards = cardRefs.current.filter(Boolean) as HTMLElement[]
         const sidebar = sidebarRef.current
-        if (!cards.length || !root.current) return
+        const stage = stageRef.current
+        if (!cards.length || !root.current || !stage) return
+
+        const cardWidth = cards[0].offsetWidth || 520
+        // Cada card cobre exatamente 75% do anterior, deixando 25% visível (stepOffset)
+        const peekFraction = 0.25
+        const stepOffset = cardWidth * peekFraction
+        const stageWidth = stage.offsetWidth || 1200
 
         // Posição inicial:
-        // O Card 0 começa ao lado da sidebar (a ~390px da esquerda), revelando o título.
-        // Os demais cards (1..4) aguardam fora da tela à direita.
+        // Card 0 começa ao lado da sidebar (a ~390px da esquerda), revelando o título.
+        // Os demais cards aguardam fora da tela à direita.
         const initialOffset = Math.min(390, window.innerWidth * 0.28)
-        gsap.set(cards[0], { x: initialOffset, scale: 1, filter: 'brightness(1)' })
+        gsap.set(cards[0], { x: initialOffset, filter: 'brightness(1)' })
         for (let i = 1; i < cards.length; i++) {
           gsap.set(cards[i], {
-            x: () => window.innerWidth + 80,
-            scale: 1,
+            x: () => window.innerWidth + 100,
             filter: 'brightness(1)',
           })
         }
         if (sidebar) gsap.set(sidebar, { opacity: 1 })
 
-        // Timeline de rolagem fixada (pin) com scrub proporcional
+        // Timeline de rolagem vinculada ao ScrollTrigger
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: root.current,
             start: 'top top',
-            end: () => `+=${totalCards * 110}%`,
+            end: () => `+=${totalCards * 115}%`,
             pin: true,
             scrub: 0.8,
             anticipatePin: 1,
@@ -68,12 +75,12 @@ export function Products() {
           },
         })
 
-        // 1. O primeiro card desliza para a esquerda sobrepondo o título da sidebar
+        // 1. O primeiro card desliza para a esquerda (x: 0), sobrepondo o título da sidebar
         tl.to(
           cards[0],
           {
             x: 0,
-            duration: 0.8,
+            duration: 0.7,
             ease: 'power2.inOut',
           },
           0
@@ -83,42 +90,46 @@ export function Products() {
             sidebar,
             {
               opacity: 0.12,
-              duration: 0.8,
+              duration: 0.7,
               ease: 'power2.inOut',
             },
             0
           )
         }
 
-        // 2. Os cards seguintes chegam da direita e empilham um por cima do outro na lateral esquerda
+        // 2. Cada card seguinte sobe da direita e cobre SEMPRE 75% do anterior
         for (let i = 1; i < cards.length; i++) {
-          const stepTime = 0.8 + (i - 1) * 1.2
+          const stepTime = 0.7 + (i - 1) * 1.15
 
-          // Os cards já empilhados diminuem levemente a escala, recuam para a esquerda e escurecem
+          // Se a pilha ultrapassar a largura do container, recua o stack suavemente para a esquerda
+          const currentStackWidth = i * stepOffset + cardWidth
+          const overflowShift = Math.max(0, currentStackWidth - stageWidth + 30)
+
+          // Atualiza a posição de todos os cards anteriores para manter a fresta de 25% e o shift
           for (let prev = 0; prev < i; prev++) {
+            const targetPrevX = prev * stepOffset - overflowShift
             const depth = i - prev
             tl.to(
               cards[prev],
               {
-                scale: Math.max(0.85, 1 - depth * 0.045),
-                x: -depth * 18,
-                filter: `brightness(${Math.max(0.45, 1 - depth * 0.22)})`,
-                duration: 1.1,
-                ease: 'power1.inOut',
+                x: targetPrevX,
+                filter: `brightness(${Math.max(0.5, 1 - depth * 0.16)})`,
+                duration: 1.05,
+                ease: 'power2.out',
               },
               stepTime
             )
           }
 
-          // O novo card chega da direita e pousa por cima na posição x: 0
+          // O novo card entra da direita e pousa exatamente cobrindo 75% do anterior
+          const targetNewX = i * stepOffset - overflowShift
           tl.to(
             cards[i],
             {
-              x: 0,
-              scale: 1,
+              x: targetNewX,
               filter: 'brightness(1)',
-              duration: 1.1,
-              ease: 'power1.inOut',
+              duration: 1.05,
+              ease: 'power2.out',
             },
             stepTime
           )
@@ -158,7 +169,7 @@ export function Products() {
           </div>
         </aside>
 
-        {/* Palco dos cards empilhados na lateral esquerda */}
+        {/* Palco dos cards empilhados na lateral esquerda com 75% de sobreposição */}
         <div className="products__stage" ref={stageRef}>
           {products.map((p, idx) => (
             <article
@@ -178,6 +189,8 @@ export function Products() {
                     {p.status === 'disponivel' ? 'Disponível' : 'Em desenvolvimento'}
                   </span>
                 </div>
+                {/* Indicador na borda visível de 25% */}
+                <span className="product-card__strip-tag">0{idx + 1}</span>
                 <span className="product-card__index">0{idx + 1}</span>
               </div>
 
@@ -233,6 +246,8 @@ export function Products() {
                 <WhatsApp size={18} /> Vamos construir juntos
               </a>
             </div>
+            {/* Tag na borda visível de 25% */}
+            <span className="product-card__strip-tag">05</span>
           </article>
         </div>
       </div>

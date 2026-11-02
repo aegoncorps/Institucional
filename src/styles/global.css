@@ -908,6 +908,21 @@ h3 {
   z-index: 2;
 }
 
+.product-card__strip-tag {
+  position: absolute;
+  left: 18px;
+  bottom: 14px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--gold);
+  z-index: 3;
+  opacity: 0.95;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
 .product-card__index {
   position: absolute;
   right: 20px;
