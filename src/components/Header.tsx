@@ -8,16 +8,11 @@ import { getInitialTheme, toggleTheme, type Theme } from '../lib/theme'
 import { mainNav } from '../data/site'
 
 /**
- * Header Principal da Aegon (Design Moderno 2026):
- * - Inspirado em navbars modernas (Arcode / Nexora / Bluestack):
- *   cantos arredondados elegantes (20px), logo encaixada com proporção e respiro perfeitos,
- *   navegação com microinterações e botão CTA harmônico.
- * - Smart Hide / Show on Scroll:
- *   - Scroll down: recolhe suavemente para fora da tela (translateY(-120%)).
- *   - Scroll up: desce e reaparece imediatamente (translateY(0)).
- *   - Na Home: respeita a abertura do Portal cósmico no topo.
- *   - No topo de páginas internas: fica visível fixo.
- *   - Mantém-se visível quando o menu mobile está aberto.
+ * Header Aegon — Design Editorial Clean (estilo Globe Express):
+ * - Sem container de pílula/dock fechado: a logo respira livremente no canto superior esquerdo.
+ * - Barra superior contínua full-width: transparente no topo e com vidro fosco premium ao rolar.
+ * - Smart Scroll: recolhe suavemente ao rolar para baixo e reaparece ao rolar para cima.
+ * - Mantém menu mobile e alternador Dark/Light mode com alinhamento impecável.
  */
 export function Header() {
   const { pathname } = useLocation()
@@ -31,7 +26,7 @@ export function Header() {
 
   const lastScrollY = useRef(0)
 
-  // Escuta alteração externa de tema
+  // Sincroniza tema
   useEffect(() => {
     const onThemeChange = (e: Event) => {
       const detail = (e as CustomEvent<{ theme: Theme }>).detail
@@ -46,12 +41,12 @@ export function Header() {
     setTheme(next)
   }
 
-  // Fecha menu mobile ao mudar de rota
+  // Fecha menu mobile na troca de rota
   useEffect(() => {
     setOpen(false)
   }, [pathname])
 
-  // Controle de passagem do portal cósmico na Home
+  // Na Home, aguarda o fim do portal inicial
   useEffect(() => {
     if (!isHome) {
       setPortalPassed(true)
@@ -73,11 +68,11 @@ export function Header() {
     return () => st.kill()
   }, [isHome])
 
-  // Smart Hide on Scroll Down & Show on Scroll Up
+  // Detecção inteligente de direção do scroll (down: esconde / up: mostra)
   useEffect(() => {
     lastScrollY.current = Math.max(0, window.scrollY)
     let ticking = false
-    const threshold = 6 // pixels mínimos de rolagem para disparar a troca (evita jitter no trackpad do Mac)
+    const threshold = 6
 
     const updateScroll = () => {
       const currentScrollY = Math.max(0, window.scrollY)
@@ -85,15 +80,12 @@ export function Header() {
 
       setIsScrolled(currentScrollY > 20)
 
-      // Se estiver próximo ao topo, sempre visível
       if (currentScrollY <= 60) {
         setScrollDir('up')
       } else if (Math.abs(diff) > threshold) {
-        if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-          // Rolando para baixo: oculta o header
+        if (currentScrollY > lastScrollY.current && currentScrollY > 90) {
           setScrollDir('down')
         } else if (currentScrollY < lastScrollY.current) {
-          // Rolando para cima: mostra o header
           setScrollDir('up')
         }
         lastScrollY.current = currentScrollY
@@ -113,7 +105,7 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [pathname])
 
-  // Trava scroll quando menu mobile estiver aberto
+  // Trava scroll ao abrir menu mobile
   useEffect(() => {
     lockScroll(open)
     if (!open) return
@@ -122,82 +114,76 @@ export function Header() {
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
-  // Define se a barra deve estar visível
-  // 1. Na Home, precisa ter passado o portal (ou estar com menu mobile aberto)
-  // 2. Quando rola para baixo (scrollDir === 'down') e já passou do topo (isScrolled), oculta!
-  // 3. Quando rola para cima (scrollDir === 'up') ou está no topo, mostra!
   const shouldShow =
-    open ||
-    (portalPassed && (scrollDir === 'up' || !isScrolled))
+    open || (portalPassed && (scrollDir === 'up' || !isScrolled))
 
   return (
     <header
-      className={`site-header ${shouldShow ? 'is-visible' : 'is-hidden'} ${
+      className={`site-header site-header--editorial ${shouldShow ? 'is-visible' : 'is-hidden'} ${
         isScrolled ? 'site-header--scrolled' : ''
       }`}
     >
-      <div className="site-header__inner">
-        {/* Logo oficial da Aegon com container e encaixe perfeito */}
+      <div className="site-header__container">
+        {/* Logo oficial da marca alinhada à esquerda com respiro nobre */}
         <Link
           to="/"
-          className="site-header__logo-btn interactive"
+          className="site-header__brand interactive"
           aria-label="Aegon — Início"
           onClick={() => {
             if (isHome) scrollToTarget(0)
           }}
         >
-          <div className="site-header__logo-wrapper">
-            <Logo label={false} />
-          </div>
+          <Logo label={false} />
         </Link>
 
-        {/* Links de navegação centralizados */}
+        {/* Links de navegação centrais limpos e arejados */}
         <nav className="site-header__nav" aria-label="Navegação principal">
           {mainNav.map((l) => (
             <NavLink
               key={l.to}
               to={l.to}
-              className={({ isActive }) => `site-header__nav-link interactive ${isActive ? 'is-active' : ''}`}
+              className={({ isActive }) =>
+                `site-header__nav-link interactive ${isActive ? 'is-active' : ''}`
+              }
             >
               {l.label}
             </NavLink>
           ))}
           <NavLink
             to="/contato"
-            className={({ isActive }) => `site-header__nav-link interactive ${isActive ? 'is-active' : ''}`}
+            className={({ isActive }) =>
+              `site-header__nav-link interactive ${isActive ? 'is-active' : ''}`
+            }
           >
             Contato
           </NavLink>
         </nav>
 
-        {/* Ações da direita: Tema + CTA WhatsApp + Menu Mobile */}
+        {/* Ações da direita: Alternador de tema discreto + CTA WhatsApp + Menu Mobile */}
         <div className="site-header__actions">
           <button
             type="button"
-            className="site-header__theme-toggle interactive"
+            className="site-header__theme-btn interactive"
             onClick={handleToggleTheme}
             aria-label={theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'}
             title={theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
           >
             {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
-            <span className="site-header__theme-label">
-              {theme === 'dark' ? 'Claro' : 'Escuro'}
-            </span>
           </button>
 
-          <Link className="btn btn--header-cta interactive" to="/contato">
+          <Link className="site-header__cta-btn interactive" to="/contato">
             <WhatsApp size={16} />
             <span>Vamos conversar</span>
           </Link>
 
           <button
-            className="site-header__menu interactive"
+            className="site-header__menu-btn interactive"
             type="button"
             aria-label={open ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <Close size={20} /> : <Menu size={20} />}
+            {open ? <Close size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
