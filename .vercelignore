@@ -1,3 +1,5 @@
 dist/assets/brand/*.pdf
+dist/assets/brand/
+**/*.pdf
 node_modules
 .git
