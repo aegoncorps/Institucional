@@ -41,9 +41,9 @@ export function Products() {
         const stageWidth = stage.offsetWidth || 1200
 
         // Posição inicial:
-        // Card 0 começa ao lado da sidebar (a ~390px da esquerda), revelando o título.
+        // Card 0 começa bem próximo da sidebar (a ~330px da esquerda), integrando título e cards.
         // Os demais cards aguardam fora da tela à direita.
-        const initialOffset = Math.min(390, window.innerWidth * 0.28)
+        const initialOffset = Math.min(330, window.innerWidth * 0.24)
         gsap.set(cards[0], { x: initialOffset, filter: 'brightness(1)' })
         for (let i = 1; i < cards.length; i++) {
           gsap.set(cards[i], {
