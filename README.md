@@ -33,7 +33,7 @@ npm run preview
 
 **Cases, clientes, indicadores, depoimentos, equipe e produtos são demonstrativos.** A v5 prioriza layout, movimento, narrativa e entendimento das ofertas. As etiquetas no site identificam o acervo e os conceitos em evolução. Substitua os dados e revise as páginas legais antes do lançamento comercial.
 
-Os dois PDFs de marca são arquivos locais de referência e estão ignorados pelo Git em `dist/assets/brand/*.pdf`. O diagnóstico derivado deles está em [`docs/EVOLUCAO_UX_AEGON_V4.md`](docs/EVOLUCAO_UX_AEGON_V4.md). O registro da implementação está em [`docs/IMPLEMENTACAO_V5.md`](docs/IMPLEMENTACAO_V5.md).
+Os dois PDFs de marca são arquivos locais de referência e estão ignorados pelo Git em `dist/assets/brand/*.pdf`. O build preserva esses arquivos; há também uma cópia de segurança fora de `dist`, em `D:\Trabalhos\Aegon\v4\brand-reference`. O diagnóstico derivado deles está em [`docs/EVOLUCAO_UX_AEGON_V4.md`](docs/EVOLUCAO_UX_AEGON_V4.md). O registro da implementação está em [`docs/IMPLEMENTACAO_V5.md`](docs/IMPLEMENTACAO_V5.md).
 
 ## Contato
 
@@ -54,4 +54,5 @@ Sem essas variáveis, o endpoint responde indisponível e a interface oferece e-
 - `api/leads.ts`: validação e entrega do contato.
 - `docs/IMPLEMENTACAO_V5.md`: decisões, rotas, testes e pendências de conteúdo real.
 - `vercel.json`: build Vite e roteamento direto da SPA.
+- `scripts/clean-generated.mjs`: limpa apenas os bundles gerados, preservando os PDFs locais durante a build.
 

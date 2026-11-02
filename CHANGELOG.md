@@ -12,3 +12,4 @@
 - Identificação mais clara dos dados demonstrativos e atualização das páginas legais para esta fase de protótipo.
 - PDFs de marca excluídos do Git por tamanho; apenas a análise em Markdown segue no repositório.
 - Prévia da v5 implantada em projeto Vercel separado, com rotas e endpoint verificados.
+- Build ajustado para preservar PDFs locais em `dist/assets/brand`, limpando apenas os bundles gerados.

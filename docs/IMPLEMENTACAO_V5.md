@@ -51,11 +51,12 @@ O formulário reúne apenas nome, e-mail e mensagem. CTAs de case, produto e sol
 
 Os casos, métricas, nomes de clientes, depoimentos, equipe, vagas e produtos desta versão são **mocks para validar a experiência**. Não foram convertidos em alegações de trabalho realizado. Os conceitos de produto aparecem como “em evolução”. As páginas legais são demonstrativas e devem receber texto jurídico e dados da empresa antes da operação comercial. O e-mail e o WhatsApp em configuração também exigem confirmação dos canais reais.
 
-Os PDFs de identidade permanecem apenas na máquina de trabalho porque são grandes; `.gitignore` impede que entrem no commit ou no push. O documento de diagnóstico registra as decisões extraídas deles.
+Os PDFs de identidade permanecem apenas na máquina de trabalho porque são grandes; `.gitignore` impede que entrem no commit ou no push, e `.vercelignore` impede o upload ao deploy. Durante a implementação, um build inicial limpou `dist` e apagou as cópias locais. Os originais foram encontrados em `C:\Users\emanu\Downloads`, restaurados ao caminho anterior e copiados para `D:\Trabalhos\Aegon\v4\brand-reference`. O build foi ajustado para limpar apenas bundles gerados e preservar os PDFs. Os hashes SHA-256 das cópias restauradas coincidem com os originais antes e depois do novo build.
 
 ## Verificação
 
 - `npm run build`: TypeScript e Vite compilados com sucesso. O bundle 3D opcional gera aviso de tamanho, sem falha de build.
+- Um segundo `npm run build` confirmou que os dois PDFs locais permaneceram íntegros (1.127.814.870 e 464.381.118 bytes; hashes iguais aos originais).
 - `npm run verify:leads`: validação, ausência de configuração, honeypot, entrega simulada e falha do provedor verificados sem enviar e-mail real.
 - `npm run verify:assets`: 34 referências de imagens e mídias conferidas no diretório público.
 - O servidor local respondeu `200` para `/`, `/contato`, `/portfolio` e para o pattern de marca.
