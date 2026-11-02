@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
 import { Logo } from './Logo'
-import { Close, Menu, Moon, Sun, WhatsApp } from './Icons'
-import { whatsappLink } from '../config'
+import { ArrowRight, Close, Menu, Moon, Sun } from './Icons'
 import { lockScroll, ScrollTrigger, scrollToTarget } from '../lib/motion'
 import { getInitialTheme, toggleTheme, type Theme } from '../lib/theme'
 import { mainNav } from '../data/site'
@@ -172,8 +171,8 @@ export function Header() {
           </button>
 
           <Link className="site-header__cta-btn interactive" to="/contato">
-            <WhatsApp size={16} />
             <span>Vamos conversar</span>
+            <ArrowRight size={15} />
           </Link>
 
           <button
@@ -216,15 +215,14 @@ export function Header() {
             </NavLink>
           ))}
         </nav>
-        <a
+        <Link
           className="btn btn--on interactive"
-          href={whatsappLink()}
-          target="_blank"
-          rel="noopener"
+          to="/contato"
+          onClick={() => setOpen(false)}
           tabIndex={open ? 0 : -1}
         >
-          <WhatsApp size={18} /> Falar direto no WhatsApp
-        </a>
+          Iniciar um projeto <ArrowRight size={17} />
+        </Link>
       </div>
     </header>
   )

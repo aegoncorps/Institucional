@@ -263,3 +263,4 @@ export function mountScrollChoreography(scope: HTMLElement | Document = document
 
   return () => ctx.revert()
 }
+

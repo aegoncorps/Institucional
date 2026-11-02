@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
+import { Link } from 'react-router'
 import { gsap } from '../lib/motion'
-import { whatsappLink } from '../config'
-import { WhatsApp, ArrowRight } from '../components/Icons'
+import { ArrowRight } from '../components/Icons'
 
 /**
  * Ato 6 — O "on" Final (Portal Reverso com Construção & Saída).
@@ -123,21 +123,19 @@ export function FinalCta() {
           </p>
         </div>
 
-        <a
+        <Link
           ref={pill}
+          to="/contato"
           className="final-cta__pill interactive"
-          href={whatsappLink('Olá, Aegon! Vim pelo site e quero conversar sobre um projeto.')}
-          target="_blank"
-          rel="noopener"
         >
           <span className="switch-pill is-on" aria-hidden="true">
             <span className="switch-pill__knob" />
             <span className="switch-pill__text">on</span>
           </span>
           <span className="final-cta__pill-label">
-            <WhatsApp size={20} /> Conversar no WhatsApp <ArrowRight size={18} />
+            Iniciar um projeto <ArrowRight size={18} />
           </span>
-        </a>
+        </Link>
       </div>
     </section>
   )

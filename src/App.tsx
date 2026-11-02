@@ -5,7 +5,6 @@ import { RouteController } from './components/RouteController'
 import { Header } from './components/Header'
 import { CustomCursor } from './components/CustomCursor'
 import { ProgressBar } from './components/ProgressBar'
-import { WhatsAppFab } from './components/WhatsAppFab'
 import { Footer } from './components/Footer'
 import { HomePage } from './pages/HomePage'
 import { AboutPage } from './pages/AboutPage'
@@ -79,7 +78,6 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
-      <WhatsAppFab />
     </BrowserRouter>
   )
 }

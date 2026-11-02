@@ -2,8 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { gsap } from '../lib/motion'
 import { pillars } from '../data/content'
-import { ArrowRight, WhatsApp } from '../components/Icons'
-import { whatsappLink } from '../config'
+import { ArrowRight } from '../components/Icons'
 
 /**
  * Ato 3 — As 3 Frentes de Atuação (Cortina de Pilares Coreografada).
@@ -227,14 +226,6 @@ export function Pillars() {
                   >
                     Explorar frente {p.title} <ArrowRight size={17} />
                   </Link>
-                  <a
-                    className="btn btn--ghost interactive"
-                    href={whatsappLink(`Olá, Aegon! Quero conversar sobre a frente de ${p.title}.`)}
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    <WhatsApp size={17} /> Falar sobre {p.title}
-                  </a>
                 </div>
               </div>
             </article>

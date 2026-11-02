@@ -2,8 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { gsap, lockScroll } from '../lib/motion'
 import { products, type Product } from '../data/content'
-import { ArrowRight, Close, WhatsApp } from '../components/Icons'
-import { whatsappLink } from '../config'
+import { ArrowRight, Close } from '../components/Icons'
 
 /**
  * Ato 4 — Produtos e Soluções (Stacking Cards com 75% de cobertura / 25% visível + Entrada e Saída).
@@ -275,7 +274,7 @@ export function Products() {
                 <div className="product-card__actions">
                   <Link
                     to={`/produtos/${p.id}`}
-                    className="btn btn--ghost btn--sm interactive"
+                    className="btn btn--on btn--sm interactive"
                   >
                     Página do produto <ArrowRight size={15} />
                   </Link>
@@ -286,14 +285,6 @@ export function Products() {
                   >
                     Resumo
                   </button>
-                  <a
-                    className="btn btn--on btn--sm interactive"
-                    href={whatsappLink(p.whatsappMessage)}
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    <WhatsApp size={15} /> {p.ctaLabel}
-                  </a>
                 </div>
               </div>
             </article>
@@ -315,14 +306,12 @@ export function Products() {
                 Desenhamos e construímos soluções digitais a partir da sua realidade — do diagnóstico inicial ao
                 sistema em produção.
               </p>
-              <a
+              <Link
+                to="/contato"
                 className="btn btn--on interactive"
-                href={whatsappLink('Olá, Aegon! Tenho um desafio específico no meu negócio e gostaria de conversar.')}
-                target="_blank"
-                rel="noopener"
               >
-                <WhatsApp size={18} /> Vamos construir juntos
-              </a>
+                Vamos construir juntos <ArrowRight size={18} />
+              </Link>
             </div>
             <span className="product-card__strip-tag">05</span>
           </article>
@@ -396,19 +385,18 @@ export function Products() {
               <div className="product-drawer__footer">
                 <Link
                   to={`/produtos/${selected.id}`}
-                  className="btn btn--ghost interactive"
+                  className="btn btn--on interactive"
                   onClick={() => setSelected(null)}
                 >
                   Ver página completa & planos <ArrowRight size={16} />
                 </Link>
-                <a
-                  className="btn btn--on interactive"
-                  href={whatsappLink(selected.whatsappMessage)}
-                  target="_blank"
-                  rel="noopener"
+                <Link
+                  to="/contato"
+                  className="btn btn--ghost interactive"
+                  onClick={() => setSelected(null)}
                 >
-                  <WhatsApp size={18} /> {selected.ctaLabel}
-                </a>
+                  Solicitar diagnóstico
+                </Link>
               </div>
             </div>
           </div>
