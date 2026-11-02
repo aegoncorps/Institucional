@@ -1,6 +1,8 @@
 import { useLayoutEffect, useRef, useState } from 'react'
+import { Link } from 'react-router'
 import { gsap } from '../lib/motion'
 import { pillars } from '../data/content'
+import { ArrowRight } from '../components/Icons'
 
 /**
  * Ato 3 — Três pilares em "zoom-through":
@@ -37,11 +39,9 @@ export function Pillars() {
         scenes.forEach((scene, i) => {
           const img = scene.querySelector('img')
           const at = i
-          // zoom lento contínuo durante a cena
           tl.fromTo(img, { scale: i === 0 ? 1.08 : 1.22 }, { scale: 1.32, duration: 1.15 }, at === 0 ? 0 : at - 0.15)
           if (i < n - 1) {
             const next = scenes[i + 1]
-            // transição: a cena atual "atravessa" a câmera e a próxima surge
             tl.to(scene, { opacity: 0, duration: 0.3 }, at + 0.7)
               .to(next, { opacity: 1, duration: 0.3 }, at + 0.7)
               .to(copies[i], { opacity: 0, y: -50, duration: 0.2 }, at + 0.65)
@@ -79,6 +79,14 @@ export function Pillars() {
                     <li key={it}>{it}</li>
                   ))}
                 </ul>
+                <div className="pillar-copy__actions">
+                  <Link to={`/solucoes/${p.id}`} className="btn btn--on btn--sm">
+                    Explorar {p.kicker} <ArrowRight size={15} />
+                  </Link>
+                  <Link to="/solucoes" className="btn btn--ghost btn--sm">
+                    Ver todas as soluções
+                  </Link>
+                </div>
               </div>
             </article>
           ))}
@@ -95,4 +103,3 @@ export function Pillars() {
     </section>
   )
 }
-

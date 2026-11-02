@@ -1,6 +1,8 @@
 import { useLayoutEffect, useRef } from 'react'
+import { Link } from 'react-router'
 import { gsap } from '../lib/motion'
 import { OnSwitchBadge } from '../components/Logo'
+import { ArrowRight } from '../components/Icons'
 
 const TEXT =
   'Estratégia, criação e tecnologia para transformar *desafios reais* em soluções digitais com *propósito humano.*'
@@ -59,6 +61,9 @@ export function Manifesto() {
             Tudo se resolve no mesmo botão. Um parceiro que pensa, cria e constrói junto com você, do
             diagnóstico à entrega.
           </p>
+          <Link to="/sobre" className="btn btn--ghost btn--sm manifesto__cta">
+            Conheça quem somos <ArrowRight size={15} />
+          </Link>
         </div>
       </div>
     </section>

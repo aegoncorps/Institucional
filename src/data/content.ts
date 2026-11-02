@@ -148,6 +148,7 @@ export const topics: Topic[] = [
 
 export type PortfolioCase = {
   id: string
+  slug?: string
   topic: string
   title: string
   client: string
@@ -159,23 +160,24 @@ export type PortfolioCase = {
 }
 
 const T = `${IMG}/3d`
+const M = `${IMG}/mock`
 
 export const cases: PortfolioCase[] = [
   // Branding
-  { id: 'b1', topic: 'branding', title: 'Identidade visual completa', client: 'Cliente exemplo · Varejo', year: '2026', summary: 'Criação de marca, paleta, tipografia e aplicações para lojas físicas e digitais.', deliverables: ['Logo e sistema visual', 'Manual de marca', 'Papelaria e embalagens'], image: `${T}/brandingIdentidade.jpg`, placeholder: true },
-  { id: 'b2', topic: 'branding', title: 'Reposicionamento de marca', client: 'Cliente exemplo · Serviços', year: '2025', summary: 'Nova narrativa e tom de voz para aproximar a marca de um público mais jovem.', deliverables: ['Plataforma de marca', 'Tom de voz', 'Campanha de lançamento'], image: `${T}/criacaoConteudo.jpg`, placeholder: true },
-  { id: 'b3', topic: 'branding', title: 'Conteúdo para redes', client: 'Cliente exemplo · Gastronomia', year: '2025', summary: 'Direção criativa e produção de conteúdo mensal para Instagram e TikTok.', deliverables: ['Linha editorial', 'Produção de vídeo', 'Templates'], image: `${T}/design.jpg`, placeholder: true },
+  { id: 'b1', slug: 'vertice-arquitetura', topic: 'branding', title: 'Vértice Arquitetura · Rebranding', client: 'Vértice Arquitetura', year: '2025', summary: 'Reposicionamento estratégico, sistema tipográfico suíço e novo portal editorial de projetos.', deliverables: ['Logo e sistema visual', 'Manual de marca', 'Site portfólio'], image: `${M}/case-vertice.jpg`, placeholder: true },
+  { id: 'b2', slug: 'sabor-da-vila', topic: 'branding', title: 'Sabor da Vila · Embalagens & Marca', client: 'Sabor da Vila', year: '2025', summary: 'Nova identidade visual artesanal, linha de embalagens premium e direção de arte para redes.', deliverables: ['Identidade visual', 'Embalagens (14 SKUs)', 'Campanha de lançamento'], image: `${M}/case-sabor.jpg`, placeholder: true },
+  { id: 'b3', slug: 'trilha-edu', topic: 'branding', title: 'Trilha Edu · Marca & Plataforma', client: 'Trilha Edu', year: '2025', summary: 'Identidade visual vibrante e experiência gamificada de aprendizado para jovens profissionais.', deliverables: ['Branding', 'Sistema de badges', 'UX/UI Web & Mobile'], image: `${M}/case-edu.jpg`, placeholder: true },
   // Sistemas
-  { id: 's1', topic: 'sistemas', title: 'Plataforma de gestão', client: 'Cliente exemplo · Indústria', year: '2026', summary: 'Sistema web para orçamento, compras e aprovações com dashboards em tempo real.', deliverables: ['Discovery', 'Sistema web', 'Integrações'], image: `${T}/financeiro.jpg`, placeholder: true },
-  { id: 's2', topic: 'sistemas', title: 'App de compras', client: 'Cliente exemplo · Consumo', year: '2026', summary: 'Aplicativo mobile com listas inteligentes e comparação de preços regionais.', deliverables: ['UX / UI', 'App iOS e Android', 'API'], image: `${T}/compras.jpg`, placeholder: true },
-  { id: 's3', topic: 'sistemas', title: 'Site institucional', client: 'Cliente exemplo · Tecnologia', year: '2025', summary: 'Site rápido, otimizado para SEO e conversão, com painel de conteúdo próprio.', deliverables: ['Arquitetura de informação', 'Desenvolvimento', 'SEO técnico'], image: `${T}/desenvolvimentoSistemas.jpg`, placeholder: true },
+  { id: 's1', slug: 'bws-365-cockpit', topic: 'sistemas', title: 'BWS 365 · Cockpit Operacional', client: 'Grupo BWS Logística', year: '2026', summary: 'Plataforma web integrada de telemetria, aprovações financeiras e BI executivo em tempo real.', deliverables: ['Discovery', 'Sistema web modular', 'Integrações ERP'], image: `${M}/case-bws365.jpg`, placeholder: true },
+  { id: 's2', slug: 'gestao-financeira-modular', topic: 'sistemas', title: 'Gestão Financeira Modular', client: 'Produto Próprio Aegon', year: '2026', summary: 'SaaS financeiro que cresce por módulos (orçamento, fluxo de caixa, compras e aprovações).', deliverables: ['Arquitetura SaaS', 'UX / UI', 'Motor de conciliação'], image: `${M}/case-financeiro.jpg`, placeholder: true },
+  { id: 's3', slug: 'clinica-bem-estar', topic: 'sistemas', title: 'Clínica Bem-Estar · Portal & Agenda', client: 'Clínica Bem-Estar', year: '2025', summary: 'Ecossistema digital de agendamento online em 3 passos, triagem inteligente e confirmação via WhatsApp.', deliverables: ['Portal institucional', 'Motor de agendamento', 'Automação WhatsApp'], image: `${M}/case-clinica.jpg`, placeholder: true },
   // Design
-  { id: 'd1', topic: 'design', title: 'UX de aplicativo de saúde', client: 'Cliente exemplo · Saúde', year: '2026', summary: 'Pesquisa com usuários e redesenho completo da experiência de agendamento.', deliverables: ['Pesquisa', 'Wireframes', 'Protótipo navegável'], image: `${T}/andresa.jpg`, placeholder: true },
-  { id: 'd2', topic: 'design', title: 'Design system', client: 'Cliente exemplo · Fintech', year: '2025', summary: 'Biblioteca de componentes para acelerar o time de produto com consistência.', deliverables: ['Tokens', 'Componentes', 'Documentação'], image: `${T}/design.jpg`, placeholder: true },
-  { id: 'd3', topic: 'design', title: 'Materiais institucionais', client: 'Cliente exemplo · Educação', year: '2025', summary: 'Apresentações, relatórios e peças impressas com linguagem visual unificada.', deliverables: ['Apresentações', 'Relatório anual', 'Peças gráficas'], image: `${T}/brandingIdentidade.jpg`, placeholder: true },
+  { id: 'd1', slug: 'projeto-andresa', topic: 'design', title: 'Projeto Andresa · IA & Cuidado', client: 'Iniciativa Aegon Labs', year: '2026', summary: 'Interface de voz assistida por IA e painel familiar para apoio ao cuidado de pessoas com Alzheimer.', deliverables: ['Pesquisa clínica', 'UX acessível', 'Painel da família'], image: `${M}/case-andresa.jpg`, placeholder: true },
+  { id: 'd2', slug: 'nexo-design-system', topic: 'design', title: 'Nexo · Design System Multi-marca', client: 'Nexo Pagamentos', year: '2025', summary: 'Arquitetura de design tokens, 68 componentes acessíveis e documentação viva para 4 squads.', deliverables: ['Design Tokens', 'Biblioteca React + Figma', 'Documentação'], image: `${M}/case-nexo.jpg`, placeholder: true },
+  { id: 'd3', slug: 'trilha-edu', topic: 'design', title: 'Trilha Edu · Experiência do Aluno', client: 'Trilha Edu', year: '2025', summary: 'Redesenho completo da jornada de aulas interativas, trilhas de estudo e comunidade.', deliverables: ['Pesquisa UX', 'Design System', 'Protótipo de alta fidelidade'], image: `${ T }/brandingIdentidade.jpg`, placeholder: true },
   // Consultoria
-  { id: 'c1', topic: 'consultoria', title: 'Diagnóstico digital', client: 'Cliente exemplo · Comércio local', year: '2026', summary: 'Mapeamento da presença digital e plano de ação de 90 dias para um pequeno negócio.', deliverables: ['Diagnóstico', 'Plano de ação', 'Acompanhamento'], image: `${T}/consultoria.jpg`, placeholder: true },
-  { id: 'c2', topic: 'consultoria', title: 'Organização de processos', client: 'Cliente exemplo · Serviços', year: '2025', summary: 'Redesenho de processos de atendimento e financeiro com ferramentas simples.', deliverables: ['Mapeamento', 'Ferramentas', 'Treinamento'], image: `${T}/financeiro.jpg`, placeholder: true },
-  { id: 'c3', topic: 'consultoria', title: 'Estratégia de lançamento', client: 'Cliente exemplo · Startup', year: '2025', summary: 'Posicionamento, oferta e funil para o lançamento de um novo produto digital.', deliverables: ['Posicionamento', 'Oferta', 'Funil'], image: `${T}/criacaoConteudo.jpg`, placeholder: true },
+  { id: 'c1', slug: 'mercado-sao-jorge', topic: 'consultoria', title: 'Mercado São Jorge · Transformação 90d', client: 'Rede São Jorge', year: '2026', summary: 'Diagnóstico operacional, implantação de compras centralizadas e canal de vendas pelo WhatsApp.', deliverables: ['Diagnóstico 360°', 'Processos de compras', 'Canal digital'], image: `${M}/case-mercado.jpg`, placeholder: true },
+  { id: 'c2', slug: 'gestao-financeira-modular', topic: 'consultoria', title: 'Reestruturação Financeira PME', client: 'Grupo Horizonte', year: '2025', summary: 'Organização de centros de custo, DRE gerencial e rituais mensais de governança financeira.', deliverables: ['Mapeamento financeiro', 'Implantação SaaS', 'Treinamento'], image: `${T}/financeiro.jpg`, placeholder: true },
+  { id: 'c3', slug: 'bws-365-cockpit', topic: 'consultoria', title: 'Governança & Indicadores de Frota', client: 'Grupo BWS Logística', year: '2025', summary: 'Redesenho de alçadas de aprovação de manutenção e painel executivo para diretoria.', deliverables: ['Mapeamento de processos', 'Matriz de alçadas', 'KPIs executivos'], image: `${T}/consultoria.jpg`, placeholder: true },
 ]
 

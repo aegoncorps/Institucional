@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { Logo } from './Logo'
 import {
   ArrowRight,
@@ -9,6 +10,7 @@ import {
   YouTube,
 } from './Icons'
 import { whatsappLink } from '../config'
+import { company } from '../data/site'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -17,52 +19,43 @@ export function Footer() {
     {
       title: 'Produtos & Tech',
       links: [
-        { label: 'BWS 365 Cockpit', href: '#produtos' },
-        { label: 'Gestão Financeira Modular', href: '#produtos' },
-        { label: 'Sistemas Sob Medida', href: '#produtos' },
-        { label: 'Plataformas & Portais Web', href: '#portfolio' },
-        { label: 'Design System & UI/UX', href: '#solucoes' },
-        { label: 'Automação & IA Integrada', href: '#solucoes' },
-        { label: 'Infraestrutura Cloud & APIs', href: '#solucoes' },
+        { label: 'BWS 365 Cockpit', to: '/portfolio/bws-365-cockpit' },
+        { label: 'Gestão Financeira Modular', to: '/produtos/financeiro' },
+        { label: 'Consultoria PMEs', to: '/produtos/consultoria' },
+        { label: 'Assistente de Compras', to: '/produtos/compras' },
+        { label: 'Projeto Andresa (IA)', to: '/produtos/andresa' },
+        { label: 'Todos os Produtos', to: '/produtos' },
       ],
     },
     {
-      title: 'Soluções & Estratégia',
+      title: 'Soluções & Pilares',
       links: [
-        { label: 'Consultoria para Pequenos Negócios', href: '#produtos' },
-        { label: 'Diagnóstico Operacional & Comercial', href: '#produtos' },
-        { label: 'Branding & Posicionamento', href: '#produtos' },
-        { label: 'Transformação Digital Ágil', href: '#solucoes' },
-        { label: 'Escala & Otimização de Processos', href: '#solucoes' },
-        { label: 'Criação de Conteúdo & Mídia', href: '#produtos' },
-        { label: 'Consultoria Executiva Wake', href: '#manifesto' },
+        { label: '01 · Estratégia & Diagnóstico', to: '/solucoes/estrategia' },
+        { label: '02 · Criação, Branding & UX', to: '/solucoes/criacao' },
+        { label: '03 · Tecnologia & Sistemas', to: '/solucoes/tecnologia' },
+        { label: 'Visão Geral de Soluções', to: '/solucoes' },
+        { label: 'Solicitar Diagnóstico', to: '/contato' },
       ],
     },
     {
-      title: 'Ecossistema',
+      title: 'Portfólio & Cases',
       links: [
-        { label: 'Manifesto Aegon', href: '#manifesto' },
-        { label: 'Pilares Estratégicos', href: '#solucoes' },
-        { label: 'Cases & Portfólio 3D', href: '#portfolio' },
-        { label: 'Reunião Estratégica 2026', href: '#inicio' },
-        { label: 'Central de Inteligência', href: '#manifesto' },
-        { label: 'Status dos Serviços', href: '#inicio' },
-        { label: 'Acessibilidade Digital', href: '#inicio' },
+        { label: 'Explorar Portfólio Completo', to: '/portfolio' },
+        { label: 'Cases de Sistemas & SaaS', to: '/portfolio?area=sistemas' },
+        { label: 'Cases de Branding & Marca', to: '/portfolio?area=branding' },
+        { label: 'Cases de Design & UX/UI', to: '/portfolio?area=design' },
+        { label: 'Cases de Consultoria', to: '/portfolio?area=consultoria' },
+        { label: 'Insights & Artigos', to: '/insights' },
       ],
     },
     {
       title: 'Empresa',
       links: [
-        { label: 'Sobre a Aegon', href: '#manifesto' },
-        { label: 'Nossa Equipe & Liderança', href: '#manifesto' },
-        { label: 'Cultura & DNA Digital', href: '#manifesto' },
-        {
-          label: 'Trabalhe Conosco',
-          href: whatsappLink('Olá! Gostaria de saber sobre oportunidades na Aegon.'),
-        },
-        { label: 'Sala de Imprensa', href: '#manifesto' },
-        { label: 'Código de Ética & Conduta', href: '#manifesto' },
-        { label: 'Canal de Transparência', href: '#manifesto' },
+        { label: 'Quem Somos & História', to: '/sobre' },
+        { label: 'Nossos Sócios & Liderança', to: '/sobre#equipe' },
+        { label: 'Como Ligamos (Processo)', to: '/sobre#processo' },
+        { label: 'Carreiras (Trabalhe Conosco)', to: '/carreiras' },
+        { label: 'Fale Conosco', to: '/contato' },
       ],
     },
   ]
@@ -77,16 +70,15 @@ export function Footer() {
   ]
 
   const legalLinks = [
-    { label: 'Termos de Uso', href: '#termos' },
-    { label: 'Política de Privacidade', href: '#privacidade' },
-    { label: 'Segurança da Informação & LGPD', href: '#seguranca' },
-    { label: 'Preferências de Cookies', href: '#cookies' },
+    { label: 'Termos de Uso', to: '/termos' },
+    { label: 'Política de Privacidade', to: '/privacidade' },
+    { label: 'Trabalhe Conosco', to: '/carreiras' },
+    { label: 'Contato Comercial', to: '/contato' },
   ]
 
   return (
     <footer className="site-footer" id="rodape" aria-label="Rodapé institucional Aegon">
       <div className="site-footer__container">
-        {/* Grade Principal com Navegação Multicolunas e Bio da Marca */}
         <div className="site-footer__grid">
           {navColumns.map((col) => (
             <div key={col.title} className="site-footer__col">
@@ -94,20 +86,20 @@ export function Footer() {
               <ul className="site-footer__list">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <a href={link.href} className="site-footer__link">
+                    <Link to={link.to} className="site-footer__link">
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
 
-          {/* Coluna de Destaque da Marca (Identidade + Bio + Contato) */}
+          {/* Coluna de Destaque da Marca */}
           <div className="site-footer__brand-col">
-            <a href="#inicio" className="site-footer__brand-logo" aria-label="Aegon, voltar ao início">
+            <Link to="/" className="site-footer__brand-logo" aria-label="Aegon, voltar ao início">
               <Logo label={false} />
-            </a>
+            </Link>
             <p className="site-footer__bio">
               A Aegon é um ecossistema integrado de estratégia de negócios, criação de alto impacto
               e engenharia tecnológica. Transformamos desafios complexos em produtos digitais
@@ -116,31 +108,23 @@ export function Footer() {
 
             <div className="site-footer__contact-card">
               <span className="site-footer__contact-kicker">Atendimento Estratégico</span>
-              <a
-                href={whatsappLink('Olá! Gostaria de conversar com um estrategista da Aegon.')}
-                target="_blank"
-                rel="noopener"
-                className="site-footer__cta-link"
-              >
-                <span>Falar com nosso time</span>
+              <Link to="/contato" className="site-footer__cta-link">
+                <span>Iniciar um projeto com a Aegon</span>
                 <ArrowRight size={16} />
-              </a>
+              </Link>
               <div className="site-footer__meta-info">
-                <span>São Paulo · Rio de Janeiro · Curitiba</span>
-                <a href="mailto:contato@aegon.com.br" className="site-footer__email-link">
-                  contato@aegon.com.br
+                <span>{company.cities.join(' · ')}</span>
+                <a href={`mailto:${company.email}`} className="site-footer__email-link">
+                  {company.email}
                 </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Linha Divisória */}
         <div className="site-footer__divider" />
 
-        {/* Barra Inferior com Redes Sociais, Links Legais e Copyright */}
         <div className="site-footer__bottom-bar">
-          {/* Redes Sociais */}
           <div className="site-footer__socials" aria-label="Redes sociais da Aegon">
             {socialLinks.map((item) => (
               <a
@@ -157,26 +141,22 @@ export function Footer() {
             ))}
           </div>
 
-          {/* Links Legais */}
           <nav className="site-footer__legal-nav" aria-label="Links legais e privacidade">
             {legalLinks.map((item) => (
-              <a key={item.label} href={item.href} className="site-footer__legal-link">
+              <Link key={item.label} to={item.to} className="site-footer__legal-link">
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
-          {/* Copyright */}
           <div className="site-footer__copyright">
             © {currentYear} AEGON. Todos os direitos reservados.
           </div>
         </div>
 
-        {/* Informações Corporativas Oficiais / Compliance */}
         <div className="site-footer__corporate">
-          Aegon Soluções Digitais e Consultoria Empresarial Ltda. · CNPJ: 48.729.104/0001-82 ·
-          Av. Brigadeiro Faria Lima, 3477 - 14º andar, Itaim Bibi, São Paulo - SP, CEP 04538-133 ·
-          Central de Atendimento: atendimento@aegon.com.br
+          {company.legalName} · CNPJ: {company.cnpj} · {company.address} · Central de Atendimento:{' '}
+          {company.email}
         </div>
       </div>
     </footer>

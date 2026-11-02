@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router'
 import { cases, topics, type PortfolioCase } from '../data/content'
-import { Close, WhatsApp } from '../components/Icons'
+import { ArrowRight, Close, WhatsApp } from '../components/Icons'
 import { whatsappLink } from '../config'
 import { prefersReducedMotion } from '../lib/motion'
 
@@ -152,14 +153,24 @@ export function Portfolio() {
                     <li key={d}>{d}</li>
                   ))}
                 </ul>
-                <a
-                  className="btn btn--on btn--sm"
-                  href={whatsappLink(`Olá, Aegon! Vi o projeto "${selectedCase.title}" no portfólio e quero conversar sobre algo semelhante.`)}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <WhatsApp size={15} /> Quero um projeto assim
-                </a>
+                <div className="portfolio__card-actions">
+                  {selectedCase.slug && (
+                    <Link
+                      className="btn btn--on btn--sm interactive"
+                      to={`/portfolio/${selectedCase.slug}`}
+                    >
+                      Ver estudo completo <ArrowRight size={15} />
+                    </Link>
+                  )}
+                  <a
+                    className="btn btn--ghost btn--sm interactive"
+                    href={whatsappLink(`Olá, Aegon! Vi o projeto "${selectedCase.title}" no portfólio e quero conversar sobre algo semelhante.`)}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <WhatsApp size={15} /> Falar sobre este case
+                  </a>
+                </div>
               </div>
             </aside>
           )}

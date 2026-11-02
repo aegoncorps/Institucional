@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Link } from 'react-router'
 import { gsap, lockScroll } from '../lib/motion'
 import { products, type Product } from '../data/content'
 import { ArrowRight, Close, WhatsApp } from '../components/Icons'
@@ -201,12 +202,18 @@ export function Products() {
                 </div>
 
                 <div className="product-card__actions">
+                  <Link
+                    to={`/produtos/${p.id}`}
+                    className="btn btn--ghost btn--sm interactive"
+                  >
+                    Página do produto <ArrowRight size={15} />
+                  </Link>
                   <button
                     type="button"
                     className="btn btn--ghost btn--sm interactive"
                     onClick={() => setSelected(p)}
                   >
-                    Ver detalhes <ArrowRight size={15} />
+                    Resumo
                   </button>
                   <a
                     className="btn btn--on btn--sm interactive"
@@ -317,6 +324,13 @@ export function Products() {
               {selected.note && <p className="drawer-note">{selected.note}</p>}
 
               <div className="product-drawer__footer">
+                <Link
+                  to={`/produtos/${selected.id}`}
+                  className="btn btn--ghost interactive"
+                  onClick={() => setSelected(null)}
+                >
+                  Ver página completa & planos <ArrowRight size={16} />
+                </Link>
                 <a
                   className="btn btn--on interactive"
                   href={whatsappLink(selected.whatsappMessage)}
