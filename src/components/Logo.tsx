@@ -55,10 +55,12 @@ export function Logo({ className = '', label = true }: LogoProps) {
         <circle cx="141" cy="44" r="9.2" />
       </g>
 
-      <g fill="#ffffff">
+      <g fill="var(--logo-aeg-color, #ffffff)" className="logo-svg__aeg">
         <path fillRule="evenodd" d={LOGO_PATHS.a} />
         <path fillRule="evenodd" d={LOGO_PATHS.e} />
         <path fillRule="evenodd" d={LOGO_PATHS.g} />
+      </g>
+      <g fill="var(--logo-on-color, #ffffff)" className="logo-svg__on">
         <path fillRule="evenodd" d={LOGO_PATHS.o} />
         <path d={LOGO_PATHS.n} />
       </g>
