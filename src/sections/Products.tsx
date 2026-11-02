@@ -5,15 +5,16 @@ import { ArrowRight, Close, WhatsApp } from '../components/Icons'
 import { whatsappLink } from '../config'
 
 /**
- * Ato 4 — Produtos e Soluções (Efeito Stacking Cards / Cartões Sobrepostos).
- * - O texto principal fica no topo da seção (eyebrow, título, subtítulo e contador).
- * - Conforme o usuário rola (scrub), cada card sobe e se sobrepõe ao anterior como um baralho,
- *   com escala reduzida no card de baixo, sombra profunda e luminosidade atenuada.
- * - Suporta navegação interativa e abertura de gaveta de detalhes completos.
+ * Ato 4 — Produtos e Soluções (Stacking Cards na lateral esquerda, sobrepondo o título).
+ * - Restaura a estrutura lateral original (título, subtítulo e contador à esquerda).
+ * - Ao rolar a tela, o primeiro card desliza para a esquerda cobrindo o título, e cada card
+ *   subsequente chega da direita e empilha exatamente por cima do anterior como um baralho.
+ * - Suporta abertura da gaveta de detalhes completos e responsividade no mobile.
  */
 export function Products() {
   const root = useRef<HTMLElement>(null)
-  const stack = useRef<HTMLDivElement>(null)
+  const sidebarRef = useRef<HTMLDivElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
   const progress = useRef<HTMLDivElement>(null)
   const [activeIdx, setActiveIdx] = useState(0)
   const [selected, setSelected] = useState<Product | null>(null)
@@ -27,26 +28,29 @@ export function Products() {
 
       mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)', () => {
         const cards = cardRefs.current.filter(Boolean) as HTMLElement[]
+        const sidebar = sidebarRef.current
         if (!cards.length || !root.current) return
 
-        // Estado inicial dos cards empilhados:
-        // O primeiro card (0) começa visível em repouso.
-        // Os cards seguintes (1..4) aguardam abaixo para subir e se sobrepor.
-        gsap.set(cards[0], { yPercent: 0, scale: 1, filter: 'brightness(1)' })
+        // Posição inicial:
+        // O Card 0 começa ao lado da sidebar (a ~390px da esquerda), revelando o título.
+        // Os demais cards (1..4) aguardam fora da tela à direita.
+        const initialOffset = Math.min(390, window.innerWidth * 0.28)
+        gsap.set(cards[0], { x: initialOffset, scale: 1, filter: 'brightness(1)' })
         for (let i = 1; i < cards.length; i++) {
           gsap.set(cards[i], {
-            yPercent: 115,
+            x: () => window.innerWidth + 80,
             scale: 1,
             filter: 'brightness(1)',
           })
         }
+        if (sidebar) gsap.set(sidebar, { opacity: 1 })
 
-        // Timeline de rolagem com pin do container e scrub proporcional
+        // Timeline de rolagem fixada (pin) com scrub proporcional
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: root.current,
             start: 'top top',
-            end: () => `+=${(cards.length - 1) * 115}%`,
+            end: () => `+=${totalCards * 110}%`,
             pin: true,
             scrub: 0.8,
             anticipatePin: 1,
@@ -56,42 +60,64 @@ export function Products() {
                 progress.current.style.transform = `scaleX(${self.progress})`
               }
               const idx = Math.min(
-                cards.length - 1,
-                Math.round(self.progress * (cards.length - 1))
+                totalCards - 1,
+                Math.round(self.progress * (totalCards - 1))
               )
               setActiveIdx(idx)
             },
           },
         })
 
-        // Para cada card subsequente, anima o card anterior recuando e o novo subindo por cima
-        for (let i = 1; i < cards.length; i++) {
-          const stepTime = i - 1
+        // 1. O primeiro card desliza para a esquerda sobrepondo o título da sidebar
+        tl.to(
+          cards[0],
+          {
+            x: 0,
+            duration: 0.8,
+            ease: 'power2.inOut',
+          },
+          0
+        )
+        if (sidebar) {
+          tl.to(
+            sidebar,
+            {
+              opacity: 0.12,
+              duration: 0.8,
+              ease: 'power2.inOut',
+            },
+            0
+          )
+        }
 
-          // 1. Os cards que ficam por baixo diminuem de escala e ganham profundidade
+        // 2. Os cards seguintes chegam da direita e empilham um por cima do outro na lateral esquerda
+        for (let i = 1; i < cards.length; i++) {
+          const stepTime = 0.8 + (i - 1) * 1.2
+
+          // Os cards já empilhados diminuem levemente a escala, recuam para a esquerda e escurecem
           for (let prev = 0; prev < i; prev++) {
             const depth = i - prev
             tl.to(
               cards[prev],
               {
-                scale: Math.max(0.86, 1 - depth * 0.045),
-                y: -depth * 14,
-                filter: `brightness(${Math.max(0.48, 1 - depth * 0.22)})`,
-                duration: 1,
+                scale: Math.max(0.85, 1 - depth * 0.045),
+                x: -depth * 18,
+                filter: `brightness(${Math.max(0.45, 1 - depth * 0.22)})`,
+                duration: 1.1,
                 ease: 'power1.inOut',
               },
               stepTime
             )
           }
 
-          // 2. O card atual sobe do fundo e pousa exatamente por cima do anterior
+          // O novo card chega da direita e pousa por cima na posição x: 0
           tl.to(
             cards[i],
             {
-              yPercent: 0,
+              x: 0,
               scale: 1,
               filter: 'brightness(1)',
-              duration: 1,
+              duration: 1.1,
               ease: 'power1.inOut',
             },
             stepTime
@@ -115,10 +141,10 @@ export function Products() {
 
   return (
     <section className="products" id="produtos" ref={root} aria-label="Produtos e ofertas">
-      <div className="products__container">
-        {/* Texto no topo da seção (eyebrow, título, subtítulo e contador) */}
-        <header className="products__header">
-          <div className="products__header-copy">
+      <div className="products__layout">
+        {/* Sidebar com título restaurado na lateral esquerda */}
+        <aside className="products__sidebar" ref={sidebarRef}>
+          <div>
             <p className="eyebrow">Produtos & Consultoria</p>
             <h2>O que a Aegon liga no seu negócio.</h2>
             <p className="products__sub">
@@ -126,40 +152,22 @@ export function Products() {
             </p>
           </div>
 
-          <div className="products__nav">
-            <div className="products__counter" aria-live="polite">
-              <strong>{String(activeIdx + 1).padStart(2, '0')}</strong>
-              <span>/ {String(totalCards).padStart(2, '0')}</span>
-            </div>
-
-            <div className="products__pills" role="tablist">
-              {products.map((p, i) => (
-                <span
-                  key={p.id}
-                  className={`products__pill ${activeIdx === i ? 'is-active' : ''}`}
-                >
-                  <span>0{i + 1}</span> {p.name.split(' ')[0]}
-                </span>
-              ))}
-              <span
-                className={`products__pill ${activeIdx === products.length ? 'is-active' : ''}`}
-              >
-                <span>05</span> Sob Medida
-              </span>
-            </div>
+          <div className="products__counter" aria-live="polite">
+            <strong>{String(activeIdx + 1).padStart(2, '0')}</strong>
+            <span>/ {String(totalCards).padStart(2, '0')}</span>
           </div>
-        </header>
+        </aside>
 
-        {/* Stack de cards sobrepostos */}
-        <div className="products__stack" ref={stack}>
+        {/* Palco dos cards empilhados na lateral esquerda */}
+        <div className="products__stage" ref={stageRef}>
           {products.map((p, idx) => (
             <article
-              className={`product-card product-card--stack product-card--${idx}`}
+              className={`product-card product-card--${idx}`}
               key={p.id}
               ref={(el) => {
                 cardRefs.current[idx] = el
               }}
-              style={{ zIndex: idx + 1 }}
+              style={{ zIndex: idx + 2 }}
             >
               <div className="product-card__media">
                 <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
@@ -175,15 +183,8 @@ export function Products() {
 
               <div className="product-card__body">
                 <div>
-                  <span className="product-card__kicker">{p.category}</span>
                   <h3>{p.name}</h3>
                   <p>{p.summary}</p>
-
-                  <ul className="product-card__features">
-                    {p.features.slice(0, 4).map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
                 </div>
 
                 <div className="product-card__actions">
@@ -209,12 +210,12 @@ export function Products() {
 
           {/* Card 5 final de conversão sob medida */}
           <article
-            className="product-card product-card--stack product-card--cta-stack"
+            className="product-card product-card--cta"
             key="cta-card"
             ref={(el) => {
               cardRefs.current[products.length] = el
             }}
-            style={{ zIndex: products.length + 1 }}
+            style={{ zIndex: products.length + 2 }}
           >
             <div className="product-card__cta-inner">
               <span className="eyebrow">Sob medida</span>
@@ -223,16 +224,14 @@ export function Products() {
                 Desenhamos e construímos soluções digitais a partir da sua realidade — do diagnóstico inicial ao
                 sistema em produção.
               </p>
-              <div className="pt-2">
-                <a
-                  className="btn btn--on interactive"
-                  href={whatsappLink('Olá, Aegon! Tenho um desafio específico no meu negócio e gostaria de conversar.')}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <WhatsApp size={18} /> Vamos construir juntos
-                </a>
-              </div>
+              <a
+                className="btn btn--on interactive"
+                href={whatsappLink('Olá, Aegon! Tenho um desafio específico no meu negócio e gostaria de conversar.')}
+                target="_blank"
+                rel="noopener"
+              >
+                <WhatsApp size={18} /> Vamos construir juntos
+              </a>
             </div>
           </article>
         </div>
