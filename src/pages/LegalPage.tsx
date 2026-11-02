@@ -91,3 +91,4 @@ export function LegalPage({ type }: { type: 'privacidade' | 'termos' }) {
     </div>
   )
 }
+

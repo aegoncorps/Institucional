@@ -24,3 +24,4 @@ export function usePageMeta({ title, description }: MetaOptions) {
     }
   }, [title, description])
 }
+

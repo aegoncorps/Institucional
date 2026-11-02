@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { lockScroll, ScrollTrigger, scrollToTarget } from '../lib/motion'
+import { mountScrollChoreography } from '../lib/scrollChoreography'
 
 /**
  * Controla a transição entre rotas da SPA:
  * - Destrava qualquer bloqueio de scroll residual (drawers/modais)
  * - Rola imediatamente para o topo da nova página
+ * - Monta o motor global de coreografia de entrada & saída (scrollChoreography)
  * - Recalcula todos os gatilhos do ScrollTrigger após a renderização
  */
 export function RouteController() {
@@ -15,6 +17,8 @@ export function RouteController() {
   useEffect(() => {
     lockScroll(false)
     setTransitioning(true)
+
+    let cleanupChoreography: (() => void) | null = null
 
     const t1 = window.setTimeout(() => {
       if (hash) {
@@ -30,8 +34,9 @@ export function RouteController() {
         window.scrollTo(0, 0)
       }
 
+      cleanupChoreography = mountScrollChoreography(document)
       ScrollTrigger.refresh()
-    }, 40)
+    }, 50)
 
     const t2 = window.setTimeout(() => {
       setTransitioning(false)
@@ -41,6 +46,7 @@ export function RouteController() {
     return () => {
       window.clearTimeout(t1)
       window.clearTimeout(t2)
+      if (cleanupChoreography) cleanupChoreography()
     }
   }, [pathname, hash])
 

@@ -6,12 +6,12 @@ import { ArrowRight, Close, WhatsApp } from '../components/Icons'
 import { whatsappLink } from '../config'
 
 /**
- * Ato 4 — Produtos e Soluções (Stacking Cards com 75% de cobertura / 25% visível).
- * - Restaura a estrutura lateral original (título, subtítulo e contador à esquerda).
- * - Ao iniciar o scroll, o Card 01 desliza para a esquerda sobrepondo o título da sidebar.
- * - Conforme o usuário continua rolando a página (scrub), cada card subsequente chega da direita
- *   e cobre SEMPRE 75% do card anterior, deixando um pedaço de 25% à vista como um baralho fatiado.
- * - Suporta abertura da gaveta de detalhes completos e empilhamento sticky no mobile.
+ * Ato 4 — Produtos e Soluções (Stacking Cards com 75% de cobertura / 25% visível + Entrada e Saída).
+ * - Pré-entrada (scrub): Conforme a seção entra na viewport, a sidebar constrói seus elementos
+ *   em cascata e o Card 01 emerge com escala e máscara.
+ * - Durante o pin (scrub): Card 01 desliza para a esquerda sobrepondo a sidebar e cada card
+ *   subsequente chega da direita cobrindo 75% do anterior (deixando 25% visível).
+ * - Saída (scrub): Ao concluir a pilha, o palco faz uma transição suave de saída rumo ao Portfólio.
  */
 export function Products() {
   const root = useRef<HTMLElement>(null)
@@ -35,25 +35,76 @@ export function Products() {
         if (!cards.length || !root.current || !stage) return
 
         const cardWidth = cards[0].offsetWidth || 520
-        // Cada card cobre exatamente 75% do anterior, deixando 25% visível (stepOffset)
         const peekFraction = 0.25
         const stepOffset = cardWidth * peekFraction
         const stageWidth = stage.offsetWidth || 1200
 
-        // Posição inicial:
-        // Card 0 começa bem próximo da sidebar (a ~330px da esquerda), integrando título e cards.
-        // Os demais cards aguardam fora da tela à direita.
         const initialOffset = Math.min(330, window.innerWidth * 0.24)
-        gsap.set(cards[0], { x: initialOffset, filter: 'brightness(1)' })
+        const sidebarParts = sidebar
+          ? gsap.utils.toArray<HTMLElement>('.eyebrow, h2, .products__sub, .products__counter', sidebar)
+          : []
+
+        // Estado inicial para a construção de entrada
+        if (sidebarParts.length) {
+          gsap.set(sidebarParts, { y: 40, opacity: 0 })
+        }
+        gsap.set(cards[0], {
+          x: initialOffset + 60,
+          y: 56,
+          scale: 0.94,
+          opacity: 0,
+          filter: 'brightness(1)',
+        })
+
         for (let i = 1; i < cards.length; i++) {
           gsap.set(cards[i], {
             x: () => window.innerWidth + 100,
+            y: 0,
+            scale: 1,
+            opacity: 1,
             filter: 'brightness(1)',
           })
         }
         if (sidebar) gsap.set(sidebar, { opacity: 1 })
 
-        // Timeline de rolagem vinculada ao ScrollTrigger
+        // 0. Pré-entrada conforme a seção sobe até o topo da tela
+        const enterTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: root.current,
+            start: 'top 88%',
+            end: 'top top',
+            scrub: 0.65,
+          },
+        })
+
+        if (sidebarParts.length) {
+          enterTl.to(
+            sidebarParts,
+            {
+              y: 0,
+              opacity: 1,
+              stagger: 0.06,
+              duration: 0.6,
+              ease: 'power3.out',
+            },
+            0
+          )
+        }
+
+        enterTl.to(
+          cards[0],
+          {
+            x: initialOffset,
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.75,
+            ease: 'power3.out',
+          },
+          0.12
+        )
+
+        // 1. Timeline principal pinada vinculada ao ScrollTrigger
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: root.current,
@@ -76,7 +127,7 @@ export function Products() {
           },
         })
 
-        // 1. O primeiro card desliza para a esquerda (x: 0), sobrepondo o título da sidebar
+        // O primeiro card desliza para a esquerda (x: 0), sobrepondo o título da sidebar
         tl.to(
           cards[0],
           {
@@ -91,6 +142,7 @@ export function Products() {
             sidebar,
             {
               opacity: 0.12,
+              x: -24,
               duration: 0.7,
               ease: 'power2.inOut',
             },
@@ -98,15 +150,12 @@ export function Products() {
           )
         }
 
-        // 2. Cada card seguinte sobe da direita e cobre SEMPRE 75% do anterior
+        // 2. Cada card seguinte vem da direita e cobre SEMPRE 75% do anterior
         for (let i = 1; i < cards.length; i++) {
           const stepTime = 0.7 + (i - 1) * 1.15
-
-          // Se a pilha ultrapassar a largura do container, recua o stack suavemente para a esquerda
           const currentStackWidth = i * stepOffset + cardWidth
           const overflowShift = Math.max(0, currentStackWidth - stageWidth + 30)
 
-          // Atualiza a posição de todos os cards anteriores para manter a fresta de 25% e o shift
           for (let prev = 0; prev < i; prev++) {
             const targetPrevX = prev * stepOffset - overflowShift
             const depth = i - prev
@@ -122,8 +171,17 @@ export function Products() {
             )
           }
 
-          // O novo card entra da direita e pousa exatamente cobrindo 75% do anterior
           const targetNewX = i * stepOffset - overflowShift
+          const cardImg = cards[i].querySelector('img')
+          if (cardImg) {
+            tl.fromTo(
+              cardImg,
+              { scale: 1.14 },
+              { scale: 1, duration: 1.05, ease: 'power2.out' },
+              stepTime
+            )
+          }
+
           tl.to(
             cards[i],
             {
@@ -135,6 +193,20 @@ export function Products() {
             stepTime
           )
         }
+
+        // 3. Saída suave do palco no final do pin antes de liberar para #portfolio
+        const exitTime = 0.7 + (cards.length - 1) * 1.15 + 0.15
+        tl.to(
+          stage,
+          {
+            y: -38,
+            scale: 0.965,
+            opacity: 0.18,
+            duration: 0.55,
+            ease: 'power2.in',
+          },
+          exitTime
+        )
       })
     }, root)
 
@@ -154,7 +226,7 @@ export function Products() {
   return (
     <section className="products" id="produtos" ref={root} aria-label="Produtos e ofertas">
       <div className="products__layout">
-        {/* Sidebar com título restaurado na lateral esquerda */}
+        {/* Sidebar com título na lateral esquerda */}
         <aside className="products__sidebar" ref={sidebarRef}>
           <div>
             <p className="eyebrow">Produtos & Consultoria</p>
@@ -190,7 +262,6 @@ export function Products() {
                     {p.status === 'disponivel' ? 'Disponível' : 'Em desenvolvimento'}
                   </span>
                 </div>
-                {/* Indicador na borda visível de 25% */}
                 <span className="product-card__strip-tag">0{idx + 1}</span>
                 <span className="product-card__index">0{idx + 1}</span>
               </div>
@@ -253,7 +324,6 @@ export function Products() {
                 <WhatsApp size={18} /> Vamos construir juntos
               </a>
             </div>
-            {/* Tag na borda visível de 25% */}
             <span className="product-card__strip-tag">05</span>
           </article>
         </div>
