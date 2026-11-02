@@ -5,68 +5,98 @@ import { ArrowRight, Close, WhatsApp } from '../components/Icons'
 import { whatsappLink } from '../config'
 
 /**
- * Ato 4 — Produtos e soluções em rolagem lateral (inspirado na Dexa).
- * No desktop: pin vertical com scrub horizontal proporcional à largura da faixa + parallax interno.
- * No mobile: carrossel nativo com scroll-snap para evitar scroll-jacking.
+ * Ato 4 — Produtos e Soluções (Efeito Stacking Cards / Cartões Sobrepostos).
+ * - O texto principal fica no topo da seção (eyebrow, título, subtítulo e contador).
+ * - Conforme o usuário rola (scrub), cada card sobe e se sobrepõe ao anterior como um baralho,
+ *   com escala reduzida no card de baixo, sombra profunda e luminosidade atenuada.
+ * - Suporta navegação interativa e abertura de gaveta de detalhes completos.
  */
 export function Products() {
   const root = useRef<HTMLElement>(null)
-  const track = useRef<HTMLDivElement>(null)
+  const stack = useRef<HTMLDivElement>(null)
   const progress = useRef<HTMLDivElement>(null)
   const [activeIdx, setActiveIdx] = useState(0)
   const [selected, setSelected] = useState<Product | null>(null)
+  const cardRefs = useRef<(HTMLElement | null)[]>([])
 
-  const totalCards = products.length + 1 // +1 para o card final de CTA
+  const totalCards = products.length + 1 // 4 produtos + 1 CTA sob medida = 5 cards
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia()
 
       mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)', () => {
-        const trackEl = track.current!
-        const getScrollAmount = () => Math.max(0, trackEl.scrollWidth - window.innerWidth + 120)
+        const cards = cardRefs.current.filter(Boolean) as HTMLElement[]
+        if (!cards.length || !root.current) return
 
-        const tween = gsap.to(trackEl, {
-          x: () => -getScrollAmount(),
-          ease: 'none',
+        // Estado inicial dos cards empilhados:
+        // O primeiro card (0) começa visível em repouso.
+        // Os cards seguintes (1..4) aguardam abaixo para subir e se sobrepor.
+        gsap.set(cards[0], { yPercent: 0, scale: 1, filter: 'brightness(1)' })
+        for (let i = 1; i < cards.length; i++) {
+          gsap.set(cards[i], {
+            yPercent: 115,
+            scale: 1,
+            filter: 'brightness(1)',
+          })
+        }
+
+        // Timeline de rolagem com pin do container e scrub proporcional
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: root.current,
             start: 'top top',
-            end: () => `+=${getScrollAmount()}`,
+            end: () => `+=${(cards.length - 1) * 115}%`,
             pin: true,
-            scrub: 1,
-            invalidateOnRefresh: true,
+            scrub: 0.8,
             anticipatePin: 1,
+            invalidateOnRefresh: true,
             onUpdate: (self) => {
               if (progress.current) {
                 progress.current.style.transform = `scaleX(${self.progress})`
               }
-              const idx = Math.min(totalCards - 1, Math.floor(self.progress * totalCards * 0.999))
+              const idx = Math.min(
+                cards.length - 1,
+                Math.round(self.progress * (cards.length - 1))
+              )
               setActiveIdx(idx)
             },
           },
         })
 
-        // Parallax sutil nas imagens internas dos cards
-        const imgs = gsap.utils.toArray<HTMLElement>('.product-card__media img')
-        imgs.forEach((img) => {
-          gsap.fromTo(
-            img,
-            { xPercent: -8, scale: 1.12 },
-            {
-              xPercent: 8,
-              scale: 1.12,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: img.closest('.product-card'),
-                containerAnimation: tween,
-                start: 'left right',
-                end: 'right left',
-                scrub: true,
+        // Para cada card subsequente, anima o card anterior recuando e o novo subindo por cima
+        for (let i = 1; i < cards.length; i++) {
+          const stepTime = i - 1
+
+          // 1. Os cards que ficam por baixo diminuem de escala e ganham profundidade
+          for (let prev = 0; prev < i; prev++) {
+            const depth = i - prev
+            tl.to(
+              cards[prev],
+              {
+                scale: Math.max(0.86, 1 - depth * 0.045),
+                y: -depth * 14,
+                filter: `brightness(${Math.max(0.48, 1 - depth * 0.22)})`,
+                duration: 1,
+                ease: 'power1.inOut',
               },
+              stepTime
+            )
+          }
+
+          // 2. O card atual sobe do fundo e pousa exatamente por cima do anterior
+          tl.to(
+            cards[i],
+            {
+              yPercent: 0,
+              scale: 1,
+              filter: 'brightness(1)',
+              duration: 1,
+              ease: 'power1.inOut',
             },
+            stepTime
           )
-        })
+        }
       })
     }, root)
 
@@ -85,9 +115,10 @@ export function Products() {
 
   return (
     <section className="products" id="produtos" ref={root} aria-label="Produtos e ofertas">
-      <div className="products__layout">
-        <aside className="products__sidebar">
-          <div>
+      <div className="products__container">
+        {/* Texto no topo da seção (eyebrow, título, subtítulo e contador) */}
+        <header className="products__header">
+          <div className="products__header-copy">
             <p className="eyebrow">Produtos & Consultoria</p>
             <h2>O que a Aegon liga no seu negócio.</h2>
             <p className="products__sub">
@@ -95,62 +126,106 @@ export function Products() {
             </p>
           </div>
 
-          <div className="products__counter" aria-live="polite">
-            <strong>{String(activeIdx + 1).padStart(2, '0')}</strong>
-            <span>/ {String(totalCards).padStart(2, '0')}</span>
+          <div className="products__nav">
+            <div className="products__counter" aria-live="polite">
+              <strong>{String(activeIdx + 1).padStart(2, '0')}</strong>
+              <span>/ {String(totalCards).padStart(2, '0')}</span>
+            </div>
+
+            <div className="products__pills" role="tablist">
+              {products.map((p, i) => (
+                <span
+                  key={p.id}
+                  className={`products__pill ${activeIdx === i ? 'is-active' : ''}`}
+                >
+                  <span>0{i + 1}</span> {p.name.split(' ')[0]}
+                </span>
+              ))}
+              <span
+                className={`products__pill ${activeIdx === products.length ? 'is-active' : ''}`}
+              >
+                <span>05</span> Sob Medida
+              </span>
+            </div>
           </div>
-        </aside>
+        </header>
 
-        <div className="products__viewport">
-          <div className="products__track" ref={track}>
-            {products.map((p, idx) => (
-              <article className="product-card" key={p.id}>
-                <div className="product-card__media">
-                  <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
-                  <div className="duotone" />
-                  <div className="product-card__badges">
-                    <span className="badge badge--category">{p.category}</span>
-                    <span className={`badge ${p.status === 'disponivel' ? 'badge--live' : 'badge--dev'}`}>
-                      {p.status === 'disponivel' ? 'Disponível' : 'Em desenvolvimento'}
-                    </span>
-                  </div>
-                  <span className="product-card__index">0{idx + 1}</span>
+        {/* Stack de cards sobrepostos */}
+        <div className="products__stack" ref={stack}>
+          {products.map((p, idx) => (
+            <article
+              className={`product-card product-card--stack product-card--${idx}`}
+              key={p.id}
+              ref={(el) => {
+                cardRefs.current[idx] = el
+              }}
+              style={{ zIndex: idx + 1 }}
+            >
+              <div className="product-card__media">
+                <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
+                <div className="duotone" />
+                <div className="product-card__badges">
+                  <span className="badge badge--category">{p.category}</span>
+                  <span className={`badge ${p.status === 'disponivel' ? 'badge--live' : 'badge--dev'}`}>
+                    {p.status === 'disponivel' ? 'Disponível' : 'Em desenvolvimento'}
+                  </span>
+                </div>
+                <span className="product-card__index">0{idx + 1}</span>
+              </div>
+
+              <div className="product-card__body">
+                <div>
+                  <span className="product-card__kicker">{p.category}</span>
+                  <h3>{p.name}</h3>
+                  <p>{p.summary}</p>
+
+                  <ul className="product-card__features">
+                    {p.features.slice(0, 4).map((f) => (
+                      <li key={f}>{f}</li>
+                    ))}
+                  </ul>
                 </div>
 
-                <div className="product-card__body">
-                  <div>
-                    <h3>{p.name}</h3>
-                    <p>{p.summary}</p>
-                  </div>
-
-                  <div className="product-card__actions">
-                    <button type="button" className="btn btn--ghost btn--sm" onClick={() => setSelected(p)}>
-                      Ver detalhes <ArrowRight size={15} />
-                    </button>
-                    <a
-                      className="btn btn--on btn--sm"
-                      href={whatsappLink(p.whatsappMessage)}
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      <WhatsApp size={15} /> {p.ctaLabel}
-                    </a>
-                  </div>
+                <div className="product-card__actions">
+                  <button
+                    type="button"
+                    className="btn btn--ghost btn--sm interactive"
+                    onClick={() => setSelected(p)}
+                  >
+                    Ver detalhes <ArrowRight size={15} />
+                  </button>
+                  <a
+                    className="btn btn--on btn--sm interactive"
+                    href={whatsappLink(p.whatsappMessage)}
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    <WhatsApp size={15} /> {p.ctaLabel}
+                  </a>
                 </div>
-              </article>
-            ))}
+              </div>
+            </article>
+          ))}
 
-            {/* Card final de conversão */}
-            <article className="product-card product-card--cta">
-              <div className="product-card__cta-inner">
-                <span className="eyebrow">Sob medida</span>
-                <h3>Tem um desafio específico no seu negócio?</h3>
-                <p>
-                  Desenhamos e construímos soluções digitais a partir da sua realidade — do diagnóstico inicial ao
-                  sistema em produção.
-                </p>
+          {/* Card 5 final de conversão sob medida */}
+          <article
+            className="product-card product-card--stack product-card--cta-stack"
+            key="cta-card"
+            ref={(el) => {
+              cardRefs.current[products.length] = el
+            }}
+            style={{ zIndex: products.length + 1 }}
+          >
+            <div className="product-card__cta-inner">
+              <span className="eyebrow">Sob medida</span>
+              <h3>Tem um desafio específico no seu negócio?</h3>
+              <p>
+                Desenhamos e construímos soluções digitais a partir da sua realidade — do diagnóstico inicial ao
+                sistema em produção.
+              </p>
+              <div className="pt-2">
                 <a
-                  className="btn btn--on"
+                  className="btn btn--on interactive"
                   href={whatsappLink('Olá, Aegon! Tenho um desafio específico no meu negócio e gostaria de conversar.')}
                   target="_blank"
                   rel="noopener"
@@ -158,8 +233,8 @@ export function Products() {
                   <WhatsApp size={18} /> Vamos construir juntos
                 </a>
               </div>
-            </article>
-          </div>
+            </div>
+          </article>
         </div>
       </div>
 
@@ -167,7 +242,7 @@ export function Products() {
         <div className="products__progress-bar" ref={progress} />
       </div>
 
-      {/* Drawer de detalhes do produto */}
+      {/* Drawer de detalhes completos do produto */}
       <div
         className={`product-drawer ${selected ? 'is-open' : ''}`}
         role="dialog"
@@ -180,7 +255,7 @@ export function Products() {
           <div className="product-drawer__panel">
             <button
               type="button"
-              className="product-drawer__close"
+              className="product-drawer__close interactive"
               onClick={() => setSelected(null)}
               aria-label="Fechar detalhes"
             >
@@ -229,7 +304,7 @@ export function Products() {
 
               <div className="product-drawer__footer">
                 <a
-                  className="btn btn--on"
+                  className="btn btn--on interactive"
                   href={whatsappLink(selected.whatsappMessage)}
                   target="_blank"
                   rel="noopener"
@@ -244,4 +319,3 @@ export function Products() {
     </section>
   )
 }
-
