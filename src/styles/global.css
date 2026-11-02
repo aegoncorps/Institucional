@@ -174,6 +174,44 @@ h3 {
 /* --------------------------------------------------------------------------
    Logo SVG oficial (vetorizada do logo.png do aegon-spa)
    -------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------
+   Logo Oficial Aegon (Ativos da Apresentação: logo-branco.png e logo-azul.png)
+   -------------------------------------------------------------------------- */
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.brand-mark__img {
+  height: 36px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+}
+
+/* No tema Escuro (Dark) e Padrão: exibe logo-branco */
+:root .brand-mark__img--light,
+html:not([data-theme="light"]) .brand-mark__img--light {
+  display: none !important;
+}
+
+:root .brand-mark__img--dark,
+html:not([data-theme="light"]) .brand-mark__img--dark {
+  display: block !important;
+}
+
+/* No tema Claro (Light): exibe logo-azul */
+html[data-theme="light"] .brand-mark__img--dark {
+  display: none !important;
+}
+
+html[data-theme="light"] .brand-mark__img--light {
+  display: block !important;
+}
+
 .logo-svg {
   display: block;
   height: 36px;
@@ -1772,39 +1810,46 @@ h3 {
 }
 
 /* ==========================================================================
-   Modo Light — Paleta Oficial index.html (Papel #f7f5f0, Tinta #14213c, Areia #e9e6de)
+   Modo Light — Design System Oficial da Apresentação AEGON (tokens.css)
+   Canvas #f8f7f3 · Tinta #10203b · Navy #052c72 · Blue #063a96 · Muted #455573
    ========================================================================== */
 
 html[data-theme="light"] {
-  /* Variáveis do index.html */
-  --paper: #f7f5f0;
-  --ink: #14213c;
+  /* Tokens oficiais espelhados de Apresentacao/.../tokens.css */
   --navy: #052c72;
   --blue: #063a96;
-  --electric: #1554cf;
+  --electric: #1250bf;
+  --ink: #10203b;
+  --paper: #f8f7f3;
+  --white: #10203b;
   --sand: #e9e6de;
-  --muted: #53627d;
+  --muted: #455573;
   --stroke: #dedfe2;
-  --gold: #b8860b;
+  --gold: #e5bd5a;
   --radius: 24px;
 
-  /* Mapeamento semântico v4 */
-  --navy-deep: #f7f5f0;
+  /* Aliases do projeto Apresentacao */
+  --ws-chrome: #052c72;
+  --ws-primary: #063a96;
+  --ws-action: #1250bf;
+  --ws-canvas: #f8f7f3;
+  --ws-selection: #e8efff;
+  --ws-text: #10203b;
+  --ws-muted: #455573;
+  --ws-border: #dedfe2;
+  --ws-surface: #ffffff;
+
+  --navy-deep: #f8f7f3;
   --navy-soft: #edeae2;
   --shadow-state: #e9e6de;
-  --white: #14213c;
 
-  /* Adaptação da Logo Oficial: 'aeg' escuro no papel, switch azul 'on' branco */
-  --logo-aeg-color: #052c72;
-  --logo-on-color: #ffffff;
-
-  background-color: #f7f5f0;
-  color: #14213c;
+  background-color: #f8f7f3;
+  color: #10203b;
 }
 
 html[data-theme="light"] body {
-  background-color: #f7f5f0;
-  color: #14213c;
+  background-color: #f8f7f3;
+  color: #10203b;
 }
 
 html[data-theme="light"] ::selection {
@@ -1812,15 +1857,16 @@ html[data-theme="light"] ::selection {
   color: #001f68;
 }
 
-/* Header em modo claro */
+/* Header em modo claro (estilo flutuante premium com logo-azul da apresentação) */
 html[data-theme="light"] .site-header__inner {
-  background: rgba(247, 245, 240, 0.92);
-  border-color: rgba(20, 33, 60, 0.12);
-  box-shadow: 0 10px 30px rgba(5, 30, 80, 0.06);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #dedfe2;
+  box-shadow: 0 10px 30px rgba(5, 30, 80, 0.08);
 }
 
 html[data-theme="light"] .site-header__nav a {
   color: #455573;
+  font-weight: 600;
 }
 
 html[data-theme="light"] .site-header__nav a:hover,
@@ -1829,87 +1875,51 @@ html[data-theme="light"] .site-header__nav a:focus {
 }
 
 html[data-theme="light"] .site-header__theme-toggle {
-  background: #edeae2;
-  border-color: #dedfe2;
-  color: #052c72;
+  background: #e8efff;
+  border: 1px solid #c8d8f4;
+  color: #063a96;
 }
 
 html[data-theme="light"] .site-header__theme-toggle:hover {
-  background: #ffffff;
-  border-color: #b9ccec;
-  color: #063a96;
+  background: #dbe6fc;
+  border-color: #052c72;
+  color: #052c72;
 }
 
 html[data-theme="light"] .site-header__menu {
   color: #052c72;
-  border-color: #dedfe2;
-  background: #edeae2;
+  border: 1px solid #dedfe2;
+  background: #ffffff;
 }
 
 html[data-theme="light"] .mobile-menu {
-  background: rgba(247, 245, 240, 0.98);
+  background: rgba(248, 247, 243, 0.98);
   border-bottom: 1px solid #dedfe2;
 }
 
 html[data-theme="light"] .mobile-menu a {
-  color: #14213c;
-  border-bottom-color: rgba(20, 33, 60, 0.08);
+  color: #10203b;
+  border-bottom-color: rgba(16, 32, 59, 0.08);
 }
 
-/* Hero / Portal em modo claro */
-html[data-theme="light"] .portal {
-  background-color: #f7f5f0;
-}
-
-html[data-theme="light"] .portal__tint {
-  background-color: #f7f5f0;
-}
-
-html[data-theme="light"] .portal__shade {
-  background:
-    radial-gradient(circle at 70% 35%, rgba(6, 58, 150, 0.1), transparent 55%),
-    linear-gradient(180deg, rgba(247, 245, 240, 0.25) 0%, rgba(247, 245, 240, 0.9) 100%);
-}
-
-html[data-theme="light"] .portal__logo-light {
-  background: radial-gradient(
-    ellipse at center,
-    rgba(6, 58, 150, 0.3) 0%,
-    rgba(0, 69, 186, 0.16) 38%,
-    transparent 72%
-  );
-  filter: blur(40px);
-}
-
-html[data-theme="light"] .portal__logo-svg {
-  filter: drop-shadow(0 15px 35px rgba(5, 44, 114, 0.2));
-}
-
-html[data-theme="light"] .portal__hint {
-  color: #53627d;
-}
-
-html[data-theme="light"] .portal__hint-line {
-  background: linear-gradient(180deg, #53627d 0%, transparent 100%);
-}
-
-html[data-theme="light"] .portal__skip {
-  color: #052c72;
-  background: rgba(233, 230, 222, 0.8);
-  border: 1px solid #dedfe2;
-}
+/* O Hero Portal (#inicio) preserva o fundo cósmico imersivo (#020b1f),
+   garantindo contraste estelar e a reprodução nítida do vídeo cósmico */
 
 /* Manifesto em modo claro */
 html[data-theme="light"] .manifesto {
-  background-color: #f7f5f0;
+  background-color: #f8f7f3;
 }
 
 html[data-theme="light"] .manifesto::before {
-  background: radial-gradient(circle at 80% 50%, rgba(6, 58, 150, 0.07), transparent 70%);
+  background: radial-gradient(circle at 80% 50%, rgba(6, 58, 150, 0.06), transparent 70%);
+}
+
+html[data-theme="light"] .manifesto .eyebrow {
+  color: #1250bf;
 }
 
 html[data-theme="light"] .manifesto__text {
-  color: #14213c;
+  color: #10203b;
 }
 
 html[data-theme="light"] .manifesto__word.is-highlight {
@@ -1917,7 +1927,7 @@ html[data-theme="light"] .manifesto__word.is-highlight {
 }
 
 html[data-theme="light"] .manifesto__aside p {
-  color: #53627d;
+  color: #455573;
 }
 
 /* Pilares em modo claro */
@@ -1930,26 +1940,32 @@ html[data-theme="light"] .pillar-copy__number {
 }
 
 html[data-theme="light"] .pillar-copy li {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   border-color: #dedfe2;
   color: #052c72;
 }
 
 /* Seção lateral Stacking Cards em modo claro */
 html[data-theme="light"] .products-section {
-  background-color: #f7f5f0;
+  background-color: #f8f7f3;
+}
+
+html[data-theme="light"] .products__aside .eyebrow {
+  color: #1250bf;
 }
 
 html[data-theme="light"] .products__aside h2 {
   color: #052c72;
+  font-family: 'Manrope', sans-serif;
+  letter-spacing: -0.045em;
 }
 
 html[data-theme="light"] .products__aside p {
-  color: #53627d;
+  color: #455573;
 }
 
 html[data-theme="light"] .products__counter {
-  color: #53627d;
+  color: #455573;
 }
 
 html[data-theme="light"] .products__counter strong {
@@ -1958,11 +1974,10 @@ html[data-theme="light"] .products__counter strong {
 
 html[data-theme="light"] .product-card {
   background: #ffffff;
-  border-color: #dedfe2;
+  border-color: #dde0e4;
   box-shadow:
-    -14px 0 35px rgba(5, 30, 80, 0.1),
-    0 20px 48px rgba(5, 30, 80, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    -14px 0 35px rgba(5, 30, 80, 0.08),
+    0 16px 40px rgba(0, 30, 80, 0.07);
 }
 
 html[data-theme="light"] .product-card__body {
@@ -1971,38 +1986,44 @@ html[data-theme="light"] .product-card__body {
 
 html[data-theme="light"] .product-card__body h3 {
   color: #052c72;
+  font-family: 'Manrope', sans-serif;
 }
 
 html[data-theme="light"] .product-card__body p {
-  color: #53627d;
+  color: #455573;
 }
 
 html[data-theme="light"] .product-card__index {
-  color: rgba(5, 44, 114, 0.09);
+  color: rgba(5, 44, 114, 0.07);
 }
 
 html[data-theme="light"] .product-card__strip-tag {
-  color: #b8860b;
-  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.9);
+  color: #e5bd5a;
+  text-shadow: 0 1px 3px rgba(5, 44, 114, 0.35);
 }
 
 html[data-theme="light"] .product-card .btn--outline {
-  border-color: #c8d7f5;
-  color: #052c72;
-  background: #f1f5ff;
+  border-color: #c8d8f4;
+  color: #063a96;
+  background: #e8efff;
+  font-weight: 800;
 }
 
 html[data-theme="light"] .product-card .btn--outline:hover {
-  background: #e4ecfc;
-  border-color: #063a96;
+  background: #dbe6fc;
+  border-color: #052c72;
+  color: #052c72;
+}
+
+html[data-theme="light"] .product-card .btn--on {
+  background: #063a96;
+  color: #ffffff;
 }
 
 html[data-theme="light"] .product-card--cta {
-  background:
-    radial-gradient(circle at 80% 20%, rgba(6, 58, 150, 0.12), transparent 60%),
-    linear-gradient(135deg, #edeae2, #f7f5f0);
-  border-color: #dedfe2;
-  box-shadow: 0 16px 45px rgba(5, 30, 80, 0.08);
+  background: #ffffff;
+  border-color: #dde0e4;
+  box-shadow: 0 16px 40px rgba(0, 30, 80, 0.08);
 }
 
 html[data-theme="light"] .product-card--cta h3 {
@@ -2010,12 +2031,16 @@ html[data-theme="light"] .product-card--cta h3 {
 }
 
 html[data-theme="light"] .product-card--cta p {
-  color: #53627d;
+  color: #455573;
 }
 
 /* Portfólio 3D em modo claro */
 html[data-theme="light"] .portfolio-section {
-  background-color: #f7f5f0;
+  background-color: #f8f7f3;
+}
+
+html[data-theme="light"] .portfolio-section .eyebrow {
+  color: #1250bf;
 }
 
 html[data-theme="light"] .portfolio-section h2 {
@@ -2023,19 +2048,19 @@ html[data-theme="light"] .portfolio-section h2 {
 }
 
 html[data-theme="light"] .portfolio-section p {
-  color: #53627d;
+  color: #455573;
 }
 
 html[data-theme="light"] .portfolio__stage {
-  background:
-    radial-gradient(circle at 50% 50%, rgba(6, 58, 150, 0.08), rgba(233, 230, 222, 0.95) 70%);
+  background: #ffffff;
   border-color: #dedfe2;
+  box-shadow: 0 14px 36px rgba(5, 30, 80, 0.06);
 }
 
 html[data-theme="light"] .portfolio__stage-bar {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   border-color: #dedfe2;
-  color: #53627d;
+  color: #455573;
 }
 
 html[data-theme="light"] .constellation-hub {
@@ -2045,20 +2070,20 @@ html[data-theme="light"] .constellation-hub {
 }
 
 html[data-theme="light"] .constellation-tag {
-  background: rgba(255, 255, 255, 0.95);
+  background: #ffffff;
   border-color: #dedfe2;
-  color: #14213c;
+  color: #10203b;
 }
 
 html[data-theme="light"] .portfolio-viewer {
-  background: rgba(247, 245, 240, 0.94);
+  background: rgba(248, 247, 243, 0.94);
 }
 
 html[data-theme="light"] .portfolio-viewer__content {
   background: #ffffff;
   border-color: #dedfe2;
-  color: #14213c;
-  box-shadow: 0 20px 60px rgba(5, 30, 80, 0.16);
+  color: #10203b;
+  box-shadow: 0 20px 60px rgba(5, 30, 80, 0.14);
 }
 
 html[data-theme="light"] .portfolio-viewer__header h3 {
@@ -2066,7 +2091,7 @@ html[data-theme="light"] .portfolio-viewer__header h3 {
 }
 
 html[data-theme="light"] .portfolio-viewer__meta-tag {
-  background: #edf2ff;
+  background: #e8efff;
   color: #063a96;
 }
 
@@ -2074,7 +2099,7 @@ html[data-theme="light"] .portfolio-viewer__meta-tag {
 html[data-theme="light"] .site-footer {
   background: #edeae2;
   border-top: 1px solid #dedfe2;
-  color: #53627d;
+  color: #455573;
 }
 
 html[data-theme="light"] .site-footer a {
@@ -2086,7 +2111,7 @@ html[data-theme="light"] .site-footer a:hover {
 }
 
 html[data-theme="light"] .site-footer__bottom {
-  border-top-color: rgba(20, 33, 60, 0.1);
+  border-top-color: rgba(16, 32, 59, 0.1);
   color: #72829e;
 }
 

@@ -180,14 +180,14 @@ export function Portal() {
           </g>
 
           {/* Camada Branca: Letras "aeg" */}
-          <g ref={aegGroup} fill="var(--logo-aeg-color, #ffffff)">
+          <g ref={aegGroup} fill="#ffffff">
             <path fillRule="evenodd" d={LOGO_PATHS.a} />
             <path fillRule="evenodd" d={LOGO_PATHS.e} />
             <path fillRule="evenodd" d={LOGO_PATHS.g} />
           </g>
 
           {/* Camada Branca: Letras "on" dentro da janela do portal */}
-          <g ref={onGroup} fill="var(--logo-on-color, #ffffff)">
+          <g ref={onGroup} fill="#ffffff">
             <path fillRule="evenodd" d={LOGO_PATHS.o} />
             <path d={LOGO_PATHS.n} />
           </g>

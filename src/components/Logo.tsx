@@ -24,47 +24,30 @@ export const ON_SYMBOL_PATHS = {
 type LogoProps = { className?: string; label?: boolean }
 
 /**
- * Logo oficial da Aegon (vetorizada a partir do `logo.png` do `aegon-spa`):
- * - "aeg" em branco com o círculo interno do "g" funcionando como botão azul do switch
- * - Cápsula azul integrando o "g" à janela arredondada onde ficam as letras "on"
+ * Logo oficial da Aegon:
+ * Utiliza os ativos oficiais da Apresentação:
+ * - `logo-branco.png` para fundos escuros
+ * - `logo-azul.png` para fundos claros
  */
 export function Logo({ className = '', label = true }: LogoProps) {
-  const uid = useId().replace(/:/g, '')
-  const maskId = `aegon-mask-${uid}`
-
   return (
-    <svg
-      className={`logo-svg ${className}`}
-      viewBox="36 22 198 62"
-      fill="none"
+    <span
+      className={`brand-mark ${className}`}
       role={label ? 'img' : undefined}
       aria-label={label ? 'Aegon' : undefined}
       aria-hidden={label ? undefined : true}
     >
-      <defs>
-        <mask id={maskId} maskUnits="userSpaceOnUse" x="30" y="20" width="210" height="70">
-          <rect x="30" y="20" width="210" height="70" fill="white" />
-          <rect x="160.5" y="28.5" width="65" height="31" rx="15.5" fill="black" />
-          <path fill="black" fillRule="evenodd" d={LOGO_PATHS.gMaskRing} />
-          <path fill="black" d={LOGO_PATHS.gMaskStem} />
-        </mask>
-      </defs>
-
-      <g fill="#0045ba">
-        <rect x="122" y="25" width="107.5" height="38" rx="19" mask={`url(#${maskId})`} />
-        <circle cx="141" cy="44" r="9.2" />
-      </g>
-
-      <g fill="var(--logo-aeg-color, #ffffff)" className="logo-svg__aeg">
-        <path fillRule="evenodd" d={LOGO_PATHS.a} />
-        <path fillRule="evenodd" d={LOGO_PATHS.e} />
-        <path fillRule="evenodd" d={LOGO_PATHS.g} />
-      </g>
-      <g fill="var(--logo-on-color, #ffffff)" className="logo-svg__on">
-        <path fillRule="evenodd" d={LOGO_PATHS.o} />
-        <path d={LOGO_PATHS.n} />
-      </g>
-    </svg>
+      <img
+        src="/assets/img/logo-branco.png"
+        alt={label ? 'Aegon' : ''}
+        className="brand-mark__img brand-mark__img--dark"
+      />
+      <img
+        src="/assets/img/logo-azul.png"
+        alt={label ? 'Aegon' : ''}
+        className="brand-mark__img brand-mark__img--light"
+      />
+    </span>
   )
 }
 
