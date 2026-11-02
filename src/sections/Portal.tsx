@@ -1,4 +1,4 @@
-import { useId, useLayoutEffect, useRef } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef } from 'react'
 import { gsap, ScrollTrigger, scrollToTarget } from '../lib/motion'
 import { getPillGeometry, pillClipString, getPlanetOffset, type PillGeometry } from '../lib/clip'
 import { VIDEO_SRC, whatsappLink } from '../config'
@@ -19,6 +19,7 @@ export function Portal() {
   const stage = useRef<HTMLElement>(null)
   const media = useRef<HTMLDivElement>(null)
   const videoWrap = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const tint = useRef<HTMLDivElement>(null)
   const pillWindow = useRef<SVGRectElement>(null)
   const onGroup = useRef<SVGGElement>(null)
@@ -29,6 +30,71 @@ export function Portal() {
 
   const logoWrap = useRef<HTMLDivElement>(null)
   const logoLight = useRef<HTMLDivElement>(null)
+
+  // Garante que o vídeo do planeta sempre execute o autoplay contínuo em qualquer navegador
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    // Força as propriedades nativas de mídia para contornar bloqueios de autoplay do WebKit / Chromium
+    video.muted = true
+    video.defaultMuted = true
+    video.playsInline = true
+    video.autoplay = true
+    video.loop = true
+
+    const tryPlay = () => {
+      if (video.paused) {
+        const promise = video.play()
+        if (promise !== undefined) {
+          promise.catch(() => {
+            // Se o browser rejeitar no primeiro milissegundo, o listener de interação destrava
+          })
+        }
+      }
+    }
+
+    tryPlay()
+
+    video.addEventListener('loadedmetadata', tryPlay)
+    video.addEventListener('loadeddata', tryPlay)
+    video.addEventListener('canplay', tryPlay)
+
+    // Se o usuário alternar abas e retornar, retoma o autoplay se estiver pausado
+    const onVisibility = () => {
+      if (!document.hidden) tryPlay()
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+
+    // Fallback de primeiro gesto (scroll, clique ou toque)
+    const onGesture = () => {
+      tryPlay()
+      window.removeEventListener('touchstart', onGesture)
+      window.removeEventListener('click', onGesture)
+      window.removeEventListener('scroll', onGesture)
+    }
+    window.addEventListener('touchstart', onGesture, { passive: true })
+    window.addEventListener('click', onGesture, { passive: true })
+    window.addEventListener('scroll', onGesture, { passive: true })
+
+    // Se o loop travar em algum frame final, reinicia sem interrupção
+    const onEnded = () => {
+      video.currentTime = 0
+      tryPlay()
+    }
+    video.addEventListener('ended', onEnded)
+
+    return () => {
+      video.removeEventListener('loadedmetadata', tryPlay)
+      video.removeEventListener('loadeddata', tryPlay)
+      video.removeEventListener('canplay', tryPlay)
+      video.removeEventListener('ended', onEnded)
+      document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('touchstart', onGesture)
+      window.removeEventListener('click', onGesture)
+      window.removeEventListener('scroll', onGesture)
+    }
+  }, [])
 
   // Timeline de Zoom-screen com ScrollTrigger (ativada exclusivamente pelo scroll)
   useLayoutEffect(() => {
@@ -136,7 +202,20 @@ export function Portal() {
     <section className="portal" id="inicio" ref={stage} aria-label="Aegon">
       <div className="portal__media" ref={media}>
         <div className="portal__video" ref={videoWrap}>
-          <video src={VIDEO_SRC} autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
+          <video
+            ref={videoRef}
+            src={VIDEO_SRC}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            disablePictureInPicture
+            disableRemotePlayback
+          >
+            <source src={VIDEO_SRC} type="video/mp4" />
+          </video>
         </div>
         <div className="portal__tint" ref={tint} />
         <div className="portal__shade" />
