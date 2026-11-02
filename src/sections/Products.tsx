@@ -5,21 +5,18 @@ import { products, type Product } from '../data/content'
 import { ArrowRight, Close } from '../components/Icons'
 
 /**
- * Ato 4 — Produtos e Soluções (Stacking Cards com 75% de cobertura / 25% visível + Entrada e Saída).
- * - Pré-entrada (scrub): Conforme a seção entra na viewport, a sidebar constrói seus elementos
- *   em cascata e o Card 01 emerge com escala e máscara.
- * - Durante o pin (scrub): Card 01 desliza para a esquerda sobrepondo a sidebar e cada card
- *   subsequente chega da direita cobrindo 75% do anterior (deixando 25% visível).
- * - Saída (scrub): Ao concluir a pilha, o palco faz uma transição suave de saída rumo ao Portfólio.
+ * Ato 4 — Produtos e Soluções em Faixa Horizontal (100% do conteúdo visível).
+ * - Coluna lateral esquerda fixa (título, subtítulo e contador) sem sobreposição de texto.
+ * - Faixa horizontal (track) onde todos os cards mostram 100% do seu conteúdo
+ *   (imagem, categoria, título completo, resumo e botões) lado a lado conforme o scroll.
  */
 export function Products() {
   const root = useRef<HTMLElement>(null)
-  const sidebarRef = useRef<HTMLDivElement>(null)
-  const stageRef = useRef<HTMLDivElement>(null)
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
   const progress = useRef<HTMLDivElement>(null)
   const [activeIdx, setActiveIdx] = useState(0)
   const [selected, setSelected] = useState<Product | null>(null)
-  const cardRefs = useRef<(HTMLElement | null)[]>([])
 
   const totalCards = products.length + 1 // 4 produtos + 1 CTA sob medida = 5 cards
 
@@ -28,87 +25,20 @@ export function Products() {
       const mm = gsap.matchMedia()
 
       mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)', () => {
-        const cards = cardRefs.current.filter(Boolean) as HTMLElement[]
-        const sidebar = sidebarRef.current
-        const stage = stageRef.current
-        if (!cards.length || !root.current || !stage) return
+        const trackEl = trackRef.current
+        const viewportEl = viewportRef.current
+        if (!trackEl || !viewportEl || !root.current) return
 
-        const cardWidth = cards[0].offsetWidth || 520
-        const peekFraction = 0.25
-        const stepOffset = cardWidth * peekFraction
-        const stageWidth = stage.offsetWidth || 1200
+        const getScrollAmount = () =>
+          Math.max(0, trackEl.scrollWidth - viewportEl.clientWidth + 24)
 
-        const initialOffset = Math.min(330, window.innerWidth * 0.24)
-        const sidebarParts = sidebar
-          ? gsap.utils.toArray<HTMLElement>('.eyebrow, h2, .products__sub, .products__counter', sidebar)
-          : []
-
-        // Estado inicial para a construção de entrada
-        if (sidebarParts.length) {
-          gsap.set(sidebarParts, { y: 40, opacity: 0 })
-        }
-        gsap.set(cards[0], {
-          x: initialOffset + 60,
-          y: 56,
-          scale: 0.94,
-          opacity: 0,
-          filter: 'brightness(1)',
-        })
-
-        for (let i = 1; i < cards.length; i++) {
-          gsap.set(cards[i], {
-            x: () => window.innerWidth + 100,
-            y: 0,
-            scale: 1,
-            opacity: 1,
-            filter: 'brightness(1)',
-          })
-        }
-        if (sidebar) gsap.set(sidebar, { opacity: 1 })
-
-        // 0. Pré-entrada conforme a seção sobe até o topo da tela
-        const enterTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: root.current,
-            start: 'top 88%',
-            end: 'top top',
-            scrub: 0.65,
-          },
-        })
-
-        if (sidebarParts.length) {
-          enterTl.to(
-            sidebarParts,
-            {
-              y: 0,
-              opacity: 1,
-              stagger: 0.06,
-              duration: 0.6,
-              ease: 'power3.out',
-            },
-            0
-          )
-        }
-
-        enterTl.to(
-          cards[0],
-          {
-            x: initialOffset,
-            y: 0,
-            scale: 1,
-            opacity: 1,
-            duration: 0.75,
-            ease: 'power3.out',
-          },
-          0.12
-        )
-
-        // 1. Timeline principal pinada vinculada ao ScrollTrigger
-        const tl = gsap.timeline({
+        const tween = gsap.to(trackEl, {
+          x: () => -getScrollAmount(),
+          ease: 'none',
           scrollTrigger: {
             trigger: root.current,
             start: 'top top',
-            end: () => `+=${totalCards * 115}%`,
+            end: () => `+=${Math.max(900, getScrollAmount() * 1.25)}`,
             pin: true,
             scrub: 0.8,
             anticipatePin: 1,
@@ -126,86 +56,26 @@ export function Products() {
           },
         })
 
-        // O primeiro card desliza para a esquerda (x: 0), sobrepondo o título da sidebar
-        tl.to(
-          cards[0],
-          {
-            x: 0,
-            duration: 0.7,
-            ease: 'power2.inOut',
-          },
-          0
-        )
-        if (sidebar) {
-          tl.to(
-            sidebar,
+        // Parallax sutil nas imagens internas dos cards durante o deslocamento
+        const imgs = gsap.utils.toArray<HTMLElement>('.product-card__media img', trackEl)
+        imgs.forEach((img) => {
+          gsap.fromTo(
+            img,
+            { scale: 1.1, xPercent: -5 },
             {
-              opacity: 0.12,
-              x: -24,
-              duration: 0.7,
-              ease: 'power2.inOut',
-            },
-            0
-          )
-        }
-
-        // 2. Cada card seguinte vem da direita e cobre SEMPRE 75% do anterior
-        for (let i = 1; i < cards.length; i++) {
-          const stepTime = 0.7 + (i - 1) * 1.15
-          const currentStackWidth = i * stepOffset + cardWidth
-          const overflowShift = Math.max(0, currentStackWidth - stageWidth + 30)
-
-          for (let prev = 0; prev < i; prev++) {
-            const targetPrevX = prev * stepOffset - overflowShift
-            const depth = i - prev
-            tl.to(
-              cards[prev],
-              {
-                x: targetPrevX,
-                filter: `brightness(${Math.max(0.5, 1 - depth * 0.16)})`,
-                duration: 1.05,
-                ease: 'power2.out',
+              scale: 1.1,
+              xPercent: 5,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: img.closest('.product-card'),
+                containerAnimation: tween,
+                start: 'left right',
+                end: 'right left',
+                scrub: true,
               },
-              stepTime
-            )
-          }
-
-          const targetNewX = i * stepOffset - overflowShift
-          const cardImg = cards[i].querySelector('img')
-          if (cardImg) {
-            tl.fromTo(
-              cardImg,
-              { scale: 1.14 },
-              { scale: 1, duration: 1.05, ease: 'power2.out' },
-              stepTime
-            )
-          }
-
-          tl.to(
-            cards[i],
-            {
-              x: targetNewX,
-              filter: 'brightness(1)',
-              duration: 1.05,
-              ease: 'power2.out',
-            },
-            stepTime
+            }
           )
-        }
-
-        // 3. Saída suave do palco no final do pin antes de liberar para #portfolio
-        const exitTime = 0.7 + (cards.length - 1) * 1.15 + 0.15
-        tl.to(
-          stage,
-          {
-            y: -38,
-            scale: 0.965,
-            opacity: 0.18,
-            duration: 0.55,
-            ease: 'power2.in',
-          },
-          exitTime
-        )
+        })
       })
     }, root)
 
@@ -225,8 +95,8 @@ export function Products() {
   return (
     <section className="products" id="produtos" ref={root} aria-label="Produtos e ofertas">
       <div className="products__layout">
-        {/* Sidebar com título na lateral esquerda */}
-        <aside className="products__sidebar" ref={sidebarRef}>
+        {/* Sidebar dedicada na lateral esquerda (sem sobreposição sobre os cards) */}
+        <aside className="products__sidebar">
           <div>
             <p className="eyebrow">Produtos & Consultoria</p>
             <h2>O que a Aegon liga no seu negócio.</h2>
@@ -241,80 +111,66 @@ export function Products() {
           </div>
         </aside>
 
-        {/* Palco dos cards empilhados na lateral esquerda com 75% de sobreposição */}
-        <div className="products__stage" ref={stageRef}>
-          {products.map((p, idx) => (
-            <article
-              className={`product-card product-card--${idx}`}
-              key={p.id}
-              ref={(el) => {
-                cardRefs.current[idx] = el
-              }}
-              style={{ zIndex: idx + 2 }}
-            >
-              <div className="product-card__media">
-                <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
-                <div className="duotone" />
-                <div className="product-card__badges">
-                  <span className="badge badge--category">{p.category}</span>
-                  <span className={`badge ${p.status === 'disponivel' ? 'badge--live' : 'badge--dev'}`}>
-                    {p.status === 'disponivel' ? 'Disponível' : 'Em desenvolvimento'}
-                  </span>
-                </div>
-                <span className="product-card__strip-tag">0{idx + 1}</span>
-                <span className="product-card__index">0{idx + 1}</span>
-              </div>
-
-              <div className="product-card__body">
-                <div>
-                  <h3>{p.name}</h3>
-                  <p>{p.summary}</p>
+        {/* Viewport e faixa horizontal: cada card exibe 100% do seu conteúdo sem cortes */}
+        <div className="products__viewport" ref={viewportRef}>
+          <div className="products__track" ref={trackRef}>
+            {products.map((p, idx) => (
+              <article className="product-card" key={p.id}>
+                <div className="product-card__media">
+                  <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
+                  <div className="duotone" />
+                  <div className="product-card__badges">
+                    <span className="badge badge--category">{p.category}</span>
+                    <span className={`badge ${p.status === 'disponivel' ? 'badge--live' : 'badge--dev'}`}>
+                      {p.status === 'disponivel' ? 'Disponível' : 'Em desenvolvimento'}
+                    </span>
+                  </div>
+                  <span className="product-card__index">0{idx + 1}</span>
                 </div>
 
-                <div className="product-card__actions">
-                  <Link
-                    to={`/produtos/${p.id}`}
-                    className="btn btn--on btn--sm interactive"
-                  >
-                    Página do produto <ArrowRight size={15} />
-                  </Link>
-                  <button
-                    type="button"
-                    className="btn btn--ghost btn--sm interactive"
-                    onClick={() => setSelected(p)}
-                  >
-                    Resumo
-                  </button>
+                <div className="product-card__body">
+                  <div>
+                    <h3>{p.name}</h3>
+                    <p>{p.summary}</p>
+                  </div>
+
+                  <div className="product-card__actions">
+                    <Link
+                      to={`/produtos/${p.id}`}
+                      className="btn btn--on btn--sm interactive"
+                    >
+                      Página do produto <ArrowRight size={15} />
+                    </Link>
+                    <button
+                      type="button"
+                      className="btn btn--ghost btn--sm interactive"
+                      onClick={() => setSelected(p)}
+                    >
+                      Resumo
+                    </button>
+                  </div>
                 </div>
+              </article>
+            ))}
+
+            {/* Card 5 final de conversão sob medida */}
+            <article className="product-card product-card--cta" key="cta-card">
+              <div className="product-card__cta-inner">
+                <span className="eyebrow">Sob medida</span>
+                <h3>Tem um desafio específico no seu negócio?</h3>
+                <p>
+                  Desenhamos e construímos soluções digitais a partir da sua realidade — do diagnóstico inicial ao
+                  sistema em produção.
+                </p>
+                <Link
+                  to="/contato"
+                  className="btn btn--on interactive"
+                >
+                  Vamos construir juntos <ArrowRight size={18} />
+                </Link>
               </div>
             </article>
-          ))}
-
-          {/* Card 5 final de conversão sob medida */}
-          <article
-            className="product-card product-card--cta"
-            key="cta-card"
-            ref={(el) => {
-              cardRefs.current[products.length] = el
-            }}
-            style={{ zIndex: products.length + 2 }}
-          >
-            <div className="product-card__cta-inner">
-              <span className="eyebrow">Sob medida</span>
-              <h3>Tem um desafio específico no seu negócio?</h3>
-              <p>
-                Desenhamos e construímos soluções digitais a partir da sua realidade — do diagnóstico inicial ao
-                sistema em produção.
-              </p>
-              <Link
-                to="/contato"
-                className="btn btn--on interactive"
-              >
-                Vamos construir juntos <ArrowRight size={18} />
-              </Link>
-            </div>
-            <span className="product-card__strip-tag">05</span>
-          </article>
+          </div>
         </div>
       </div>
 
