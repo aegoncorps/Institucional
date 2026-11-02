@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 82" fill="none">
+  <!-- Símbolo Oficial "on" da Identidade Visual Aegon (Fonte VomZom) -->
+  <!-- Letra "o": círculo externo D=82, orifício interno D=40 -->
+  <path
+    fill="currentColor"
+    fill-rule="evenodd"
+    d="M 41,0 A 41,41 0 1,0 41,82 A 41,41 0 1,0 41,0 Z M 41,21 A 20,20 0 1,1 41,61 A 20,20 0 1,1 41,21 Z"
+  />
+  <!-- Letra "n": arco contínuo externo R=41.5, arco interno R=19.5, hastes verticais até a base -->
+  <path
+    fill="currentColor"
+    d="M 89,82 V 41.5 A 41.5,41.5 0 0,1 172,41.5 V 82 H 150 V 41.5 A 19.5,19.5 0 0,0 111,41.5 V 82 Z"
+  />
+</svg>
+

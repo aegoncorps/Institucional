@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="36 22 198 62" fill="none">
+  <defs>
+    <!-- Recorte interno da pílula "on" e recorte onde o "g" branco sobrepõe a pílula -->
+    <mask id="aegon-blue-mask" maskUnits="userSpaceOnUse" x="30" y="20" width="210" height="70">
+      <rect x="30" y="20" width="210" height="70" fill="white" />
+      <!-- Janela interna transparente da cápsula "on" -->
+      <rect x="160.5" y="28.5" width="65" height="31" rx="15.5" fill="black" />
+      <!-- Anel branco do "g" que corta a pílula azul -->
+      <path
+        fill="black"
+        fill-rule="evenodd"
+        d="M141 25 A19 19 0 1 0 141 63 A19 19 0 1 0 141 25 Z M141 35 A9 9 0 1 1 141 53 A9 9 0 1 1 141 35 Z"
+      />
+      <path
+        fill="black"
+        d="M150 25 H160 V64 C160 74.5 152.5 81 141 81 V72 C147 72 150 69 150 64 Z"
+      />
+    </mask>
+  </defs>
+
+  <!-- Camada Azul: Pílula do interruptor + círculo interno do "g" -->
+  <g fill="#0347b0">
+    <rect x="122" y="25" width="107.5" height="38" rx="19" mask="url(#aegon-blue-mask)" />
+    <circle cx="141" cy="44" r="9.2" />
+  </g>
+
+  <!-- Camada Branca: Letras "a", "e", "g" -->
+  <g fill="#ffffff">
+    <!-- "a": círculo perfeito + haste direita -->
+    <path
+      fill-rule="evenodd"
+      d="M58 25 A19 19 0 1 0 58 63 C62.2 63 65.8 61.5 68.5 59.2 V62.5 H77 V25.5 H68.5 V28.8 C65.8 26.5 62.2 25 58 25 Z M58 34.8 A9.2 9.2 0 1 1 58 53.2 A9.2 9.2 0 1 1 58 34.8 Z"
+    />
+
+    <!-- "e": círculo com barra horizontal e abertura inferior direita -->
+    <path
+      fill-rule="evenodd"
+      d="M100 25 C89.5 25 81 33.5 81 44 C81 54.5 89.5 63 100 63 C107.4 63 113.8 59.1 117 53.2 H106.8 C105 54.6 102.6 55.4 100 55.4 C94.4 55.4 89.8 51.5 89.1 46.2 H118.8 C119 45.4 119 44.6 119 43.8 C119 33.4 110.5 25 100 25 Z M90.5 39.2 C91.8 35.1 95.5 32.2 100 32.2 C104.5 32.2 108.2 35.1 109.5 39.2 H90.5 Z"
+    />
+
+    <!-- "g": círculo + haste com descendente curvo -->
+    <path
+      fill-rule="evenodd"
+      d="M141 25 A19 19 0 1 0 141 63 C144.6 63 147.8 62 150.2 60.2 V63.8 C150.2 69 146.8 72.2 141 72.2 V81 C152.6 81 160 74.4 160 63.8 V25.5 H150.2 V27.8 C147.8 26 144.6 25 141 25 Z M141 34.8 A9.2 9.2 0 1 1 141 53.2 A9.2 9.2 0 1 1 141 34.8 Z"
+    />
+  </g>
+
+  <!-- Camada Branca: Letras "o", "n" dentro da pílula -->
+  <g fill="#ffffff">
+    <!-- "o" -->
+    <path
+      fill-rule="evenodd"
+      d="M179 32 A12 12 0 1 0 179 56 A12 12 0 1 0 179 32 Z M179 38 A6 6 0 1 1 179 50 A6 6 0 1 1 179 38 Z"
+    />
+    <!-- "n" -->
+    <path
+      d="M194 43.5 C194 36.8 199 32 206 32 C213 32 218 36.8 218 43.5 V55.5 H212 V43.8 C212 40.2 209.6 37.8 206 37.8 C202.4 37.8 200 40.2 200 43.8 V55.5 H194 V43.5 Z"
+    />
+  </g>
+</svg>
+
