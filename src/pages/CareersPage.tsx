@@ -3,6 +3,7 @@ import { jobs } from '../data/insights'
 import { values } from '../data/site'
 import { WhatsApp } from '../components/Icons'
 import { whatsappLink } from '../config'
+import { RouteChapter } from '../components/ExperienceScenes'
 
 export function CareersPage() {
   usePageMeta({
@@ -15,7 +16,7 @@ export function CareersPage() {
     <div className="spa-page careers-page" id="conteudo">
       <section className="page-hero">
         <div className="container">
-          <p className="eyebrow">Carreiras & Cultura</p>
+          <p className="eyebrow">Carreiras & Cultura · apresentação demonstrativa</p>
           <h1>
             Construa soluções que as pessoas <em>realmente usam</em>.
           </h1>
@@ -25,6 +26,17 @@ export function CareersPage() {
           </p>
         </div>
       </section>
+
+      <RouteChapter
+        variant="culture"
+        index="01 / Gente que liga ideias"
+        eyebrow="Cultura Aegon"
+        title="Criar junto é o nosso jeito de avançar."
+        description="Talento técnico, repertório criativo e curiosidade pelo negócio sentam à mesma mesa. É assim que damos forma ao que ainda não existe."
+        image="/assets/img/mock/sobre-equipe.jpg"
+        secondaryImage="/assets/img/mock/sobre-estudio.jpg"
+        imageAlt="Equipe em colaboração"
+      />
 
       <section className="page-section page-section--alt">
         <div className="container">
@@ -51,8 +63,8 @@ export function CareersPage() {
         <div className="container">
           <div className="section-header">
             <div>
-              <p className="eyebrow">Posições Abertas & Banco de Especialistas</p>
-              <h2>Oportunidades atuais na Aegon.</h2>
+              <p className="eyebrow">Perfis em estudo · exemplos</p>
+              <h2>Talentos que queremos conectar.</h2>
             </div>
           </div>
 

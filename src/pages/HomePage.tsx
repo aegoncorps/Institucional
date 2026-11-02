@@ -5,6 +5,7 @@ import { Pillars } from '../sections/Pillars'
 import { Products } from '../sections/Products'
 import { HomeShowcase } from '../sections/HomeShowcase'
 import { FinalCta } from '../sections/FinalCta'
+import { ActivationBridge } from '../components/ExperienceScenes'
 
 export function HomePage() {
   usePageMeta({
@@ -18,6 +19,7 @@ export function HomePage() {
       <Portal />
       <div id="conteudo">
         <Manifesto />
+        <ActivationBridge />
         <Pillars />
         <Products />
         <HomeShowcase />

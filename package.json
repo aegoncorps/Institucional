@@ -1,13 +1,15 @@
 {
-  "name": "aegon-v4-site",
+  "name": "aegon-v5-site",
   "private": true,
-  "version": "4.0.2",
+  "version": "5.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc -b --noEmit"
+    "typecheck": "tsc -b --noEmit",
+    "verify:leads": "node --experimental-strip-types scripts/verify-leads.mjs",
+    "verify:assets": "node scripts/verify-assets.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

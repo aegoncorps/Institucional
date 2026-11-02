@@ -3,7 +3,8 @@ import { usePageMeta } from '../lib/seo'
 import { caseStudies, caseAreas, areaLabel, areaColor, type CaseArea } from '../data/cases'
 import { Portfolio as ConstellationSection } from '../sections/Portfolio'
 import { ArrowRight, WhatsApp } from '../components/Icons'
-import { whatsappLink } from '../config'
+import { contactPath, whatsappLink } from '../config'
+import { RouteChapter } from '../components/ExperienceScenes'
 
 export function PortfolioPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -11,15 +12,17 @@ export function PortfolioPage() {
   const viewMode = searchParams.get('view') === '3d' ? '3d' : 'editorial'
 
   usePageMeta({
-    title: 'Portfólio & Estudos de Caso — Projetos Reais e Demonstrativos',
+    title: 'Portfólio & Estudos de Caso Demonstrativos — Aegon',
     description:
-      'Explore os projetos de Branding, Sistemas Web, UX/UI Design e Consultoria da Aegon, com métricas de impacto, entregas detalhadas e navegação 3D.',
+      'Explore estudos demonstrativos de Branding, Sistemas Web, UX/UI Design e Consultoria, com navegação editorial e 3D.',
   })
 
   const filteredCases =
     activeArea === 'all'
       ? caseStudies
       : caseStudies.filter((c) => c.areas.includes(activeArea))
+  const spotlight = filteredCases[0]
+  const gridCases = filteredCases.slice(1)
 
   const setFilter = (area: string) => {
     const next = new URLSearchParams(searchParams)
@@ -42,13 +45,13 @@ export function PortfolioPage() {
         <div className="container">
           <div className="portfolio-hero__top">
             <div>
-              <p className="eyebrow">Acervo Aegon · Estudos de Caso</p>
+              <p className="eyebrow">Acervo Aegon · Estudos demonstrativos</p>
               <h1>
                 Projetos pensados para dar <em>clareza</em>, tração e escala.
               </h1>
               <p className="page-hero__lead">
-                Explore cada trabalho em detalhes: o problema inicial do cliente, a abordagem escolhida,
-                a arquitetura construída e os indicadores alcançados após o lançamento.
+                Explore narrativas demonstrativas de problema, abordagem e solução. Clientes,
+                depoimentos e indicadores desta versão são exemplos de composição.
               </p>
             </div>
 
@@ -114,13 +117,25 @@ export function PortfolioPage() {
         </div>
       </section>
 
+      {viewMode === 'editorial' && <RouteChapter
+        variant="work"
+        index="01 / Trabalho em foco"
+        eyebrow="Portfólio Aegon"
+        title="Cada projeto começa com uma pergunta melhor."
+        description="Entre em um trabalho para ver a decisão por trás da forma: o problema, o caminho e a experiência que saiu do papel."
+        image={spotlight.cover}
+        imageAlt={spotlight.title}
+        to={`/portfolio/${spotlight.slug}`}
+        linkLabel="Abrir o projeto em destaque"
+      />}
+
       {viewMode === '3d' ? (
         <ConstellationSection />
       ) : (
         <section className="page-section portfolio-editorial-section">
           <div className="container">
             <div className="portfolio-editorial-grid">
-              {filteredCases.map((c, index) => (
+              {gridCases.map((c, index) => (
                 <article
                   className={`portfolio-showcase-card ${
                     index === 0 && activeArea === 'all' ? 'portfolio-showcase-card--hero' : ''
@@ -218,7 +233,7 @@ export function PortfolioPage() {
             <h2>Tem uma marca para posicionar ou um sistema para construir?</h2>
           </div>
           <div className="page-cta-band__actions">
-            <Link to="/contato" className="btn btn--on interactive">
+            <Link to={contactPath('Portfólio')} className="btn btn--on interactive">
               Iniciar briefing do projeto <ArrowRight size={17} />
             </Link>
           </div>

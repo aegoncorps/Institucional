@@ -4,8 +4,9 @@ import { products } from '../data/content'
 import { productPages } from '../data/solutions'
 import { getCase } from '../data/cases'
 import { ArrowRight, WhatsApp } from '../components/Icons'
-import { whatsappLink } from '../config'
+import { contactPath, whatsappLink } from '../config'
 import { NotFoundPage } from './NotFoundPage'
+import { ProductDemo } from '../components/ProductDemo'
 
 export function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -42,9 +43,7 @@ export function ProductDetailPage() {
                   baseProduct.status === 'disponivel' ? 'badge--live' : 'badge--dev'
                 }`}
               >
-                {baseProduct.status === 'disponivel'
-                  ? 'Disponível para contratação'
-                  : 'Em desenvolvimento · Lista prioritária'}
+                Conceito em evolução
               </span>
             </div>
 
@@ -61,7 +60,7 @@ export function ProductDetailPage() {
               >
                 <WhatsApp size={18} /> {baseProduct.ctaLabel}
               </a>
-              <Link to="/contato" className="btn btn--ghost interactive">
+              <Link to={contactPath(baseProduct.name)} className="btn btn--ghost interactive">
                 Agendar demonstração
               </Link>
             </div>
@@ -73,6 +72,8 @@ export function ProductDetailPage() {
           </div>
         </div>
       </section>
+
+      <ProductDemo key={baseProduct.id} productId={baseProduct.id} />
 
       {/* Para quem é & O Problema */}
       <section className="page-section page-section--alt">

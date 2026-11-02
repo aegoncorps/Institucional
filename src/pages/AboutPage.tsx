@@ -3,6 +3,7 @@ import { usePageMeta } from '../lib/seo'
 import { company, team, values, processSteps, timeline, stats } from '../data/site'
 import { ArrowRight, WhatsApp } from '../components/Icons'
 import { whatsappLink } from '../config'
+import { RouteChapter } from '../components/ExperienceScenes'
 
 export function AboutPage() {
   usePageMeta({
@@ -17,7 +18,7 @@ export function AboutPage() {
       <section className="page-hero">
         <div className="container page-hero__grid">
           <div className="page-hero__copy">
-            <p className="eyebrow">Quem Somos · Aegon</p>
+            <p className="eyebrow">Quem Somos · narrativa demonstrativa</p>
             <h1>
               Um parceiro completo para <em>ligar</em> o seu negócio ao próximo nível.
             </h1>
@@ -46,9 +47,23 @@ export function AboutPage() {
         </div>
       </section>
 
+      <RouteChapter
+        variant="human"
+        index="01 / Quem somos"
+        eyebrow="O lado humano do on"
+        title="Pessoas diferentes. Uma mesma direção."
+        description="A Aegon nasce quando estratégia, criação e tecnologia deixam de passar o problema adiante e assumem juntas o que precisa ser resolvido."
+        image="/assets/img/mock/sobre-equipe.jpg"
+        secondaryImage="/assets/img/mock/sobre-estudio.jpg"
+        imageAlt="Equipe reunida em uma conversa de projeto"
+        to="/solucoes"
+        linkLabel="Veja como trabalhamos"
+      />
+
       {/* Indicadores */}
       <section className="page-section page-section--tight">
         <div className="container">
+          <p className="eyebrow">Indicadores ilustrativos de composição</p>
           <div className="trust-stats">
             {stats.map((s) => (
               <div className="trust-stat-card" key={s.label}>

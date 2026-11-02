@@ -110,7 +110,7 @@ export function FinalCta() {
   return (
     <section className="final-cta" id="contato" ref={root} aria-label="Contato">
       <div className="final-cta__media" ref={media} aria-hidden="true">
-        <img src="/assets/media/cta-bg.jpg" alt="" loading="lazy" decoding="async" />
+        <img src="/assets/img/mock/sobre-estudio.jpg" alt="" loading="lazy" decoding="async" />
         <div className="duotone" />
       </div>
 

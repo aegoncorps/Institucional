@@ -3,7 +3,8 @@ import { usePageMeta } from '../lib/seo'
 import { products } from '../data/content'
 import { productPages } from '../data/solutions'
 import { ArrowRight, WhatsApp } from '../components/Icons'
-import { whatsappLink } from '../config'
+import { contactPath, whatsappLink } from '../config'
+import { ProductDemo } from '../components/ProductDemo'
 
 export function ProductsPage() {
   usePageMeta({
@@ -21,11 +22,13 @@ export function ProductsPage() {
             Soluções próprias que nascem de <em>problemas reais</em>.
           </h1>
           <p className="page-hero__lead">
-            Além de projetos sob medida, desenvolvemos plataformas SaaS, aplicativos e programas de
-            consultoria com metodologia própria para acelerar resultados sem complexidade desnecessária.
+            Explore conceitos de plataformas, aplicativos e consultoria. Esta versão usa
+            conteúdo demonstrativo para apresentar a experiência e o potencial de cada oferta.
           </p>
         </div>
       </section>
+
+      <ProductDemo productId="financeiro" showSwitcher />
 
       <section className="page-section">
         <div className="container products-catalog-grid">
@@ -46,7 +49,7 @@ export function ProductsPage() {
                         p.status === 'disponivel' ? 'badge--live' : 'badge--dev'
                       }`}
                     >
-                      {p.status === 'disponivel' ? 'Disponível agora' : 'Em desenvolvimento'}
+                      Conceito em evolução
                     </span>
                   </div>
                   <span className="featured-case-card__number">0{idx + 1}</span>
@@ -106,7 +109,7 @@ export function ProductsPage() {
             <Link to="/solucoes/tecnologia" className="btn btn--ghost interactive">
               Conhecer Engenharia Sob Medida
             </Link>
-            <Link to="/contato" className="btn btn--on interactive">
+            <Link to={contactPath('Sistema sob medida')} className="btn btn--on interactive">
               Solicitar orçamento <ArrowRight size={17} />
             </Link>
           </div>

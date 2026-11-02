@@ -1,8 +1,9 @@
 import { useEffect, useId, useLayoutEffect, useRef } from 'react'
+import { Link } from 'react-router'
 import { gsap, ScrollTrigger, scrollToTarget } from '../lib/motion'
 import { getPillGeometry, pillClipString, getPlanetOffset, type PillGeometry } from '../lib/clip'
-import { VIDEO_SRC, whatsappLink } from '../config'
-import { ArrowDown, ArrowRight, WhatsApp } from '../components/Icons'
+import { VIDEO_SRC } from '../config'
+import { ArrowDown, ArrowRight } from '../components/Icons'
 import { LOGO_PATHS, OnBrandPill } from '../components/Logo'
 
 /**
@@ -284,15 +285,13 @@ export function Portal() {
       <div className="portal__headline container" ref={headline}>
         <p className="eyebrow">Estratégia · Criação · Tecnologia</p>
         <h1>
-          Um novo capítulo.
+          Tudo entra em movimento.
           <br />
           Juntos, <OnBrandPill className="portal__on-pill" />
         </h1>
-        <p className="lead">Transformamos desafios reais em soluções digitais com propósito humano.</p>
+        <p className="lead">Ativamos marcas, operações e produtos com estratégia, criação e tecnologia na mesma direção.</p>
         <div className="actions">
-          <a className="btn btn--on" href={whatsappLink()} target="_blank" rel="noopener">
-            <WhatsApp size={18} /> Falar no WhatsApp
-          </a>
+          <Link className="btn btn--on" to="/contato">Começar uma conversa <ArrowRight size={16} /></Link>
           <a className="btn btn--ghost" href="#solucoes">
             Ver soluções <ArrowRight size={16} />
           </a>

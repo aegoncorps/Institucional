@@ -3,8 +3,9 @@ import { usePageMeta } from '../lib/seo'
 import { getSolution, solutions } from '../data/solutions'
 import { caseStudies } from '../data/cases'
 import { ArrowRight, WhatsApp } from '../components/Icons'
-import { whatsappLink } from '../config'
+import { contactPath, whatsappLink } from '../config'
 import { NotFoundPage } from './NotFoundPage'
+import { SolutionLayers } from '../components/ExperienceScenes'
 
 export function SolutionDetailPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -52,7 +53,7 @@ export function SolutionDetailPage() {
               >
                 <WhatsApp size={18} /> Falar com especialista em {sol.name}
               </a>
-              <Link to="/contato" className="btn btn--ghost interactive">
+              <Link to={contactPath(`Solução: ${sol.name}`)} className="btn btn--ghost interactive">
                 Enviar briefing detalhado
               </Link>
             </div>
@@ -68,6 +69,8 @@ export function SolutionDetailPage() {
           </div>
         </div>
       </section>
+
+      <SolutionLayers key={sol.slug} initial={Number(sol.number) - 1} />
 
       {/* Dores que resolvemos */}
       <section className="page-section page-section--alt">

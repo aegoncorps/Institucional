@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { usePageMeta } from '../lib/seo'
 import { posts, formatDate } from '../data/insights'
 import { ArrowRight } from '../components/Icons'
+import { RouteChapter } from '../components/ExperienceScenes'
 
 const categories = ['Todos', 'Estratégia', 'Criação', 'Tecnologia'] as const
 
@@ -26,16 +27,28 @@ export function InsightsPage() {
     <div className="spa-page insights-page" id="conteudo">
       <section className="page-hero">
         <div className="container">
-          <p className="eyebrow">Publicações & Notas de Campo</p>
+          <p className="eyebrow">Publicações & Notas de Campo · exemplos editoriais</p>
           <h1>
             Insights sobre tecnologia, design e <em>decisões de negócio</em>.
           </h1>
           <p className="page-hero__lead">
-            Compartilhamos o que aprendemos na trincheira construindo marcas, plataformas e processos
-            para empresas que querem crescer com organização.
+            Uma amostra da voz editorial Aegon: perguntas, argumentos e aprendizados que ajudam
+            a pensar marcas, plataformas e operações com mais clareza.
           </p>
         </div>
       </section>
+
+      <RouteChapter
+        variant="thinking"
+        index="01 / Pensamento em movimento"
+        eyebrow="Notas de campo"
+        title="Antes da ferramenta, uma pergunta melhor."
+        description="Ideias, decisões e aprendizados de quem desenha marcas, produtos e operações todos os dias."
+        image={featured.cover}
+        imageAlt={featured.title}
+        to={`/insights/${featured.slug}`}
+        linkLabel="Leia a história em destaque"
+      />
 
       {/* Artigo em Destaque */}
       <section className="page-section page-section--tight">

@@ -54,7 +54,7 @@ export function mountScrollChoreography(scope: HTMLElement | Document = document
 
     // 2. Mídias & Imagens Editoriais (máscara clip-path + parallax interno na entrada e saída)
     const mediaBlocks = gsap.utils.toArray<HTMLElement>(
-      '[data-scroll-media], .editorial-case__media, .page-hero__media, .about-origin__media, .portfolio-showcase-card__media, .case-hero__cover, .solution-pillar-block__media, .product-catalog-card__media',
+      '[data-scroll-media], .page-hero__media, .about-origin__media, .portfolio-showcase-card__media, .case-hero__cover, .solution-overview-card__media, .catalog-product-card__media',
       scope
     )
 
@@ -102,13 +102,13 @@ export function mountScrollChoreography(scope: HTMLElement | Document = document
           },
           0.34
         )
-        // Saída: fecha suavemente a máscara e sobe
+        // Mantém a mídia legível após a revelação.
         .to(
           media,
           {
-            clipPath: 'inset(8% 4% 8% 4% round 20px)',
-            opacity: 0.12,
-            y: -42,
+            clipPath: 'inset(0% 0% 0% 0% round 20px)',
+            opacity: 1,
+            y: 0,
             duration: 0.26,
             ease: 'power2.in',
           },
@@ -184,12 +184,12 @@ export function mountScrollChoreography(scope: HTMLElement | Document = document
           duration: 0.42,
           ease: 'none',
         })
-        // Fase 3: Saída pelo topo (desconstrói ao continuar descendo)
+        // Fase 3: o conteúdo permanece disponível para leitura.
         .to(block, {
-          x: fromX * -0.35,
-          y: -40,
-          opacity: 0.08,
-          scale: 0.97,
+          x: 0,
+          y: 0,
+          opacity: 1,
+          scale: 1,
           duration: 0.26,
           ease: 'power2.in',
         })
@@ -247,11 +247,11 @@ export function mountScrollChoreography(scope: HTMLElement | Document = document
           duration: 0.38,
           ease: 'none',
         })
-        // Saída em cascata conforme sobe para fora da tela
+        // Após a entrada, os itens permanecem legíveis.
         .to(items, {
-          y: -36,
-          opacity: 0.08,
-          scale: 0.97,
+          y: 0,
+          opacity: 1,
+          scale: 1,
           stagger: 0.04,
           duration: 0.28,
           ease: 'power2.in',

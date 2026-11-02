@@ -3,6 +3,7 @@ import { usePageMeta } from '../lib/seo'
 import { getPost, posts, formatDate } from '../data/insights'
 import { ArrowRight } from '../components/Icons'
 import { NotFoundPage } from './NotFoundPage'
+import { RouteChapter } from '../components/ExperienceScenes'
 
 export function InsightPostPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -79,6 +80,16 @@ export function InsightPostPage() {
           })}
         </div>
       </article>
+
+      <RouteChapter
+        variant="thinking"
+        index="02 / Em perspectiva"
+        eyebrow={post.category}
+        title="Uma ideia só importa quando muda a próxima decisão."
+        description={post.excerpt}
+        image={post.cover}
+        imageAlt={post.title}
+      />
 
       {/* Artigos Relacionados */}
       <section className="page-section page-section--alt">

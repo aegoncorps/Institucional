@@ -66,7 +66,7 @@ export type Product = {
 export const products: Product[] = [
   {
     id: 'consultoria',
-    status: 'disponivel',
+    status: 'desenvolvimento',
     category: 'Consultoria',
     name: 'Consultoria para Pequenos Negócios',
     summary: 'Organize a presença digital e os processos do seu negócio sem contratar o que você não precisa.',
@@ -80,7 +80,7 @@ export const products: Product[] = [
   },
   {
     id: 'financeiro',
-    status: 'disponivel',
+    status: 'desenvolvimento',
     category: 'SaaS · Gestão',
     name: 'Gestão Financeira Modular',
     summary: 'Gestão financeira que cresce por módulos, sem impor complexidade desnecessária.',

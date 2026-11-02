@@ -5,7 +5,7 @@ import { OnSwitchBadge } from '../components/Logo'
 import { ArrowRight } from '../components/Icons'
 
 const TEXT =
-  'Estratégia, criação e tecnologia para transformar *desafios reais* em soluções digitais com *propósito humano.*'
+  'Marcas, operações e produtos deixam o automático quando ganham *clareza,* *intenção* e *presença.*'
 
 /** Ato 2 — Manifesto: palavras acendem conforme o scroll (respiro entre os zooms). */
 export function Manifesto() {
@@ -58,8 +58,8 @@ export function Manifesto() {
         <div className="manifesto__aside">
           <OnSwitchBadge className="manifesto__switch" />
           <p>
-            Tudo se resolve no mesmo botão. Um parceiro que pensa, cria e constrói junto com você, do
-            diagnóstico à entrega.
+            Tudo se resolve no mesmo botão. Encontramos o que precisa ser ativado, damos direção à ideia e
+            construímos o próximo movimento com você.
           </p>
           <Link to="/sobre" className="btn btn--ghost btn--sm manifesto__cta">
             Conheça quem somos <ArrowRight size={15} />

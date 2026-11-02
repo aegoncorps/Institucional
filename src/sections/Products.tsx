@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { gsap, lockScroll } from '../lib/motion'
 import { products, type Product } from '../data/content'
 import { ArrowRight, Close } from '../components/Icons'
+import { contactPath } from '../config'
 
 /**
  * Ato 4 — Produtos e Soluções em Faixa Horizontal (100% do conteúdo visível).
@@ -122,7 +123,7 @@ export function Products() {
                   <div className="product-card__badges">
                     <span className="badge badge--category">{p.category}</span>
                     <span className={`badge ${p.status === 'disponivel' ? 'badge--live' : 'badge--dev'}`}>
-                      {p.status === 'disponivel' ? 'Disponível' : 'Em desenvolvimento'}
+                      Conceito em evolução
                     </span>
                   </div>
                   <span className="product-card__index">0{idx + 1}</span>
@@ -163,7 +164,7 @@ export function Products() {
                   sistema em produção.
                 </p>
                 <Link
-                  to="/contato"
+                  to={contactPath('Produto sob medida')}
                   className="btn btn--on interactive"
                 >
                   Vamos construir juntos <ArrowRight size={18} />
@@ -247,7 +248,7 @@ export function Products() {
                   Ver página completa & planos <ArrowRight size={16} />
                 </Link>
                 <Link
-                  to="/contato"
+                  to={contactPath(selected.name)}
                   className="btn btn--ghost interactive"
                   onClick={() => setSelected(null)}
                 >

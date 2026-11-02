@@ -54,13 +54,7 @@ export function HomeShowcase() {
             duration: 0.4,
             ease: 'none',
           })
-          .to(headParts, {
-            y: -38,
-            opacity: 0.08,
-            stagger: 0.04,
-            duration: 0.26,
-            ease: 'power2.in',
-          })
+          .to(headParts, { y: 0, opacity: 1, duration: 0.26 })
       }
 
       // 2. Cada Estudo de Caso Editorial (Construção em 3 colunas na entrada + Desconstrução na saída)
@@ -133,11 +127,11 @@ export function HomeShowcase() {
         // FASE B — Platô de leitura no centro da viewport
         tl.to(spread, { duration: 0.36, ease: 'none' }, 0.38)
 
-        // FASE C — Desconstrução (Saída ao continuar descendo)
+        // A composição permanece legível após a revelação.
         if (metaCol) {
           tl.to(
             metaCol,
-            { y: -36, opacity: 0.08, duration: 0.26, ease: 'power2.in' },
+            { y: 0, opacity: 1, duration: 0.26 },
             0.74
           )
         }
@@ -145,9 +139,9 @@ export function HomeShowcase() {
           tl.to(
             mediaWrap,
             {
-              clipPath: 'inset(8% 4% 8% 4% round 18px)',
-              y: -48,
-              opacity: 0.12,
+              clipPath: 'inset(0% 0% 0% 0% round 18px)',
+              y: 0,
+              opacity: 1,
               duration: 0.26,
               ease: 'power2.in',
             },
@@ -158,8 +152,8 @@ export function HomeShowcase() {
           tl.to(
             copyParts,
             {
-              y: -42,
-              opacity: 0.08,
+              y: 0,
+              opacity: 1,
               stagger: 0.025,
               duration: 0.26,
               ease: 'power2.in',
@@ -198,14 +192,14 @@ export function HomeShowcase() {
         {/* Cabeçalho Editorial */}
         <div className="home-showcase__head">
           <div>
-            <p className="eyebrow">04 / Portfólio & Impacto Real</p>
+            <p className="eyebrow">04 / Portfólio demonstrativo</p>
             <h2>
               Trabalhos que <em className="editorial-serif">ligaram</em> marcas, produtos e
               operações.
             </h2>
             <p className="home-showcase__sub">
-              Cada projeto nasce de um diagnóstico real e termina com indicadores claros de
-              evolução. Conheça três estudos de caso selecionados ou explore o acervo completo.
+              Esta seleção usa histórias e indicadores ilustrativos para apresentar como pensamos,
+              criamos e construímos. Explore os estudos de caso ou navegue pelo acervo.
             </p>
           </div>
           <div className="home-showcase__head-actions">
@@ -284,7 +278,8 @@ export function HomeShowcase() {
                     <strong>Escopo:</strong> {c.services.join('  ·  ')}
                   </p>
 
-                  <div className="editorial-case__metrics">
+                {c.placeholder && <span className="badge badge--dev">Case ilustrativo</span>}
+                <div className="editorial-case__metrics">
                     {c.results.map((r) => (
                       <div className="editorial-metric" key={r.label}>
                         <strong>{r.value}</strong>
@@ -315,6 +310,7 @@ export function HomeShowcase() {
 
         {/* Faixa Arquitetônica de Indicadores (Sem caixinhas genéricas) */}
         <div className="editorial-ledger-wrap">
+          <p className="eyebrow">Indicadores ilustrativos / composição visual</p>
           <div className="editorial-rule" data-scroll-line />
           <div className="editorial-ledger" data-scroll-stagger aria-label="Indicadores da Aegon">
             {stats.map((s, i) => (
@@ -332,7 +328,7 @@ export function HomeShowcase() {
           <div className="editorial-rule" data-scroll-line />
           <div className="editorial-clients__header" data-scroll-reveal>
             <span className="eyebrow">Ecossistema Aegon</span>
-            <p>Operações, marcas e plataformas construídas lado a lado com nossos parceiros</p>
+            <p>Nomes demonstrativos usados para visualizar o futuro acervo de marcas e parceiros</p>
           </div>
           <div className="editorial-clients__list" data-scroll-stagger>
             {clients.map((cl, i) => (
@@ -341,7 +337,7 @@ export function HomeShowcase() {
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <strong>{cl}</strong>
-                <span className="editorial-client-row__tag">Parceiro Aegon</span>
+                <span className="editorial-client-row__tag">Exemplo</span>
               </div>
             ))}
           </div>
@@ -349,6 +345,7 @@ export function HomeShowcase() {
 
         {/* Citações Editoriais de Clientes */}
         <div className="editorial-quotes-wrap">
+          <p className="eyebrow">Depoimentos ilustrativos</p>
           <div className="editorial-rule" data-scroll-line />
           <div className="editorial-quotes" data-scroll-stagger>
             {testimonials.map((t, i) => (

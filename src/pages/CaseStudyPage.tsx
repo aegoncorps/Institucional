@@ -1,9 +1,11 @@
+import type { CSSProperties } from 'react'
 import { Link, useParams } from 'react-router'
 import { usePageMeta } from '../lib/seo'
 import { caseStudies, getCase, areaLabel, areaColor } from '../data/cases'
 import { ArrowRight, WhatsApp } from '../components/Icons'
-import { whatsappLink } from '../config'
+import { contactPath, whatsappLink } from '../config'
 import { NotFoundPage } from './NotFoundPage'
+import { RouteChapter } from '../components/ExperienceScenes'
 
 export function CaseStudyPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -20,7 +22,7 @@ export function CaseStudyPage() {
   const nextCase = caseStudies[(currentIdx + 1) % caseStudies.length]
 
   return (
-    <div className="spa-page case-study-page" id="conteudo">
+    <div className="spa-page case-study-page" id="conteudo" style={{ '--v5-case-accent': item.accent } as CSSProperties}>
       {/* Hero do Estudo de Caso */}
       <section className="case-hero">
         <div className="container">
@@ -40,7 +42,7 @@ export function CaseStudyPage() {
               </span>
             ))}
             {item.placeholder && (
-              <span className="badge badge--dev">Estudo demonstrativo (Mock)</span>
+              <span className="badge badge--dev">Estudo demonstrativo · dados ilustrativos</span>
             )}
           </div>
 
@@ -63,6 +65,16 @@ export function CaseStudyPage() {
           </div>
         </div>
       </section>
+
+      <RouteChapter
+        variant="case"
+        index="02 / Por dentro"
+        eyebrow="O detalhe revela a decisão"
+        title={item.headline}
+        description={item.challenge}
+        image={item.cover}
+        imageAlt={item.title}
+      />
 
       {/* Corpo do Case: Ficha Técnica Sticky + Narrativa do Trabalho */}
       <section className="page-section">
@@ -128,6 +140,9 @@ export function CaseStudyPage() {
               >
                 <WhatsApp size={17} /> Quero um projeto assim
               </a>
+              <Link to={contactPath(`Case: ${item.title}`)} className="btn btn--ghost interactive">
+                Começar em três perguntas <ArrowRight size={17} />
+              </Link>
             </div>
           </aside>
 

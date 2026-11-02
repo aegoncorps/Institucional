@@ -1,5 +1,5 @@
 /**
- * Configurações globais do site Aegon v4.
+ * Configurações globais do site Aegon v5.
  * ⚠️ Substitua o número do WhatsApp antes de publicar (formato internacional, só dígitos).
  */
 export const WHATSAPP_NUMBER = '5500000000000'
@@ -12,4 +12,8 @@ export function whatsappLink(message: string = WHATSAPP_DEFAULT_MESSAGE): string
 }
 
 export const VIDEO_SRC = '/assets/video/world.mp4'
+
+export function contactPath(origin: string): string {
+  return `/contato?origem=${encodeURIComponent(origin)}`
+}
 

@@ -4,6 +4,7 @@ import { solutions } from '../data/solutions'
 import { processSteps } from '../data/site'
 import { ArrowRight, WhatsApp } from '../components/Icons'
 import { whatsappLink } from '../config'
+import { SolutionLayers } from '../components/ExperienceScenes'
 
 export function SolutionsPage() {
   usePageMeta({
@@ -26,6 +27,8 @@ export function SolutionsPage() {
           </p>
         </div>
       </section>
+
+      <SolutionLayers />
 
       <section className="page-section">
         <div className="container solutions-list">

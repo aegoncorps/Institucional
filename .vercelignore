@@ -1,0 +1,3 @@
+dist/assets/brand/*.pdf
+node_modules
+.git
