@@ -40,7 +40,11 @@
   opacity: 0.035;
   pointer-events: none;
 }
-.spa-page:not(.contact-v5) .page-hero > .container { position: relative; z-index: 1; width: 100%; }
+.spa-page:not(.contact-v5) .page-hero > .container {
+  position: relative;
+  z-index: 1;
+  width: min(1440px, calc(100% - clamp(40px, 6vw, 112px)));
+}
 .spa-page:not(.contact-v5) .page-hero h1 {
   font-size: clamp(3.2rem, 6.4vw, 7.5rem);
   line-height: 0.96;
@@ -326,6 +330,7 @@
   .portfolio-page .portfolio-showcase-card:nth-child(even) .portfolio-showcase-card__media { order: 0; }
 }
 @media (max-width: 640px) {
+  .spa-page:not(.contact-v5) .page-hero > .container { width: calc(100% - 32px); }
   .spa-page:not(.contact-v5) .page-hero { min-height: 66svh; padding-block: 95px 65px; }
   .spa-page:not(.contact-v5) .page-hero h1 { font-size: clamp(2.8rem, 12vw, 4.4rem); }
   .v5-bridge { min-height: 0; }
