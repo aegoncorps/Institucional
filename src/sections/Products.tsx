@@ -1,23 +1,22 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, Close } from '../components/Icons'
 import { OnBrandSymbol } from '../components/Logo'
-import { lockScroll, prefersReducedMotion } from '../lib/motion'
+import { lockScroll, ScrollTrigger, scrollToTarget } from '../lib/motion'
 import { products, type Product } from '../data/content'
 import { contactPath } from '../config'
 
-const CARD_DURATION = 5200
-
-type TimedSlide = {
+type ProductScene = {
   id: string
   title: string
+  previewTitle?: string
   kicker: string
   summary: string
   image?: string
   product?: Product
 }
 
-const slides: TimedSlide[] = [
+const slides: ProductScene[] = [
   ...products.map((product) => ({
     id: product.id,
     title: product.name,
@@ -29,31 +28,50 @@ const slides: TimedSlide[] = [
   {
     id: 'sob-medida',
     title: 'Seu próximo produto começa por uma pergunta.',
+    previewTitle: 'Sob medida',
     kicker: 'Solução sob medida',
     summary: 'Estratégia, criação e tecnologia trabalham juntas para tirar uma ideia do papel e colocá-la em operação.',
   },
 ]
 
-/**
- * Uma cena temporizada: o item selecionado ocupa o cenário principal e os
- * demais se tornam cartões de navegação. Inspirado na interação da referência.
- */
+/** Uma cena por etapa da rolagem, com imagem e conteúdo ocupando toda a tela. */
 export function Products() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const sceneRef = useRef<HTMLDivElement>(null)
+  const progressRef = useRef<HTMLSpanElement>(null)
   const [activeIdx, setActiveIdx] = useState(0)
-  const [paused, setPaused] = useState(false)
   const [selected, setSelected] = useState<Product | null>(null)
   const active = slides[activeIdx]
-  const previews = useMemo(() => slides.filter((_, index) => index !== activeIdx), [activeIdx])
+  const previews = slides.filter((_, index) => index !== activeIdx)
 
-  const goTo = (index: number) => setActiveIdx((index + slides.length) % slides.length)
-  const goNext = () => goTo(activeIdx + 1)
-  const goPrevious = () => goTo(activeIdx - 1)
+  const goTo = (index: number) => {
+    const section = sectionRef.current
+    const scene = sceneRef.current
+    if (!section || !scene) return
+    const targetIndex = Math.max(0, Math.min(slides.length - 1, index))
+    const travel = section.offsetHeight - scene.offsetHeight
+    const start = section.getBoundingClientRect().top + window.scrollY
+    scrollToTarget(start + travel * (targetIndex + 0.02) / slides.length)
+  }
 
-  useEffect(() => {
-    if (paused || prefersReducedMotion()) return
-    const timer = window.setInterval(goNext, CARD_DURATION)
-    return () => window.clearInterval(timer)
-  }, [activeIdx, paused])
+  useLayoutEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const update = (progress: number) => {
+      const index = Math.max(0, Math.min(slides.length - 1, Math.floor(progress * slides.length)))
+      setActiveIdx((current) => current === index ? current : index)
+      if (progressRef.current) progressRef.current.style.transform = `scaleX(${progress})`
+    }
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => update(self.progress),
+      onRefresh: (self) => update(self.progress),
+    })
+    update(trigger.progress)
+    return () => trigger.kill()
+  }, [])
 
   useEffect(() => {
     lockScroll(Boolean(selected))
@@ -64,17 +82,8 @@ export function Products() {
   }, [selected])
 
   return (
-    <section className="products products-timed" id="produtos" aria-labelledby="products-heading">
-      <div className="products-timed__atmosphere" aria-hidden="true">
-        <span className="products-timed__grid" />
-        <span className="products-timed__orbit products-timed__orbit--a" />
-        <span className="products-timed__orbit products-timed__orbit--b" />
-        <span className="products-timed__star products-timed__star--a" />
-        <span className="products-timed__star products-timed__star--b" />
-        <span className="products-timed__brand"><OnBrandSymbol /></span>
-      </div>
-
-      <div className="products-showcase" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false) }} aria-roledescription="carrossel" aria-label="Produtos e consultoria Aegon">
+    <section ref={sectionRef} className="products products-timed" id="produtos" aria-labelledby="products-heading">
+      <div ref={sceneRef} className="products-showcase" aria-label="Produtos e consultoria Aegon">
         <div className={`products-showcase__backdrop ${active.image ? '' : 'is-custom'}`} key={active.id} style={active.image ? { backgroundImage: `url(${active.image})` } : undefined} aria-hidden="true" />
         <div className="products-showcase__veil" aria-hidden="true" />
 
@@ -99,11 +108,11 @@ export function Products() {
           {previews.map((slide) => {
             const index = slides.findIndex((item) => item.id === slide.id)
             return (
-              <button type="button" className={`products-showcase__card ${slide.image ? '' : 'is-custom'}`} key={slide.id} onClick={() => goTo(index)} aria-label={`Abrir ${slide.title}`}>
+              <button type="button" className={`products-showcase__card ${slide.image ? '' : 'is-custom'}`} key={slide.id} onClick={() => goTo(index)} aria-label={`Ir para ${slide.title}`}>
                 {slide.image ? <img src={slide.image} alt="" loading="lazy" /> : <span className="products-showcase__card-pattern"><OnBrandSymbol /></span>}
                 <span className="products-showcase__card-shade" />
                 <span className="products-showcase__card-kicker">{slide.kicker}</span>
-                <strong>{slide.title}</strong>
+                <strong>{slide.previewTitle ?? slide.title}</strong>
               </button>
             )
           })}
@@ -111,10 +120,11 @@ export function Products() {
 
         <div className="products-showcase__footer">
           <div className="products-showcase__controls">
-            <button type="button" className="interactive" onClick={goPrevious} aria-label="Oferta anterior"><ArrowRight size={17} /></button>
-            <button type="button" className="interactive" onClick={goNext} aria-label="Próxima oferta"><ArrowRight size={17} /></button>
+            <button type="button" className="interactive" onClick={() => goTo(activeIdx - 1)} disabled={activeIdx === 0} aria-label="Oferta anterior"><ArrowRight size={17} /></button>
+            <button type="button" className="interactive" onClick={() => goTo(activeIdx + 1)} disabled={activeIdx === slides.length - 1} aria-label="Próxima oferta"><ArrowRight size={17} /></button>
           </div>
-          <div className={`products-showcase__progress ${paused ? 'is-paused' : ''}`} aria-hidden="true"><span key={active.id} /></div>
+          <span className="products-showcase__scroll-hint">Role para explorar</span>
+          <div className="products-showcase__progress" aria-hidden="true"><span ref={progressRef} /></div>
           <p className="products-showcase__count"><strong>{String(activeIdx + 1).padStart(2, '0')}</strong> / {String(slides.length).padStart(2, '0')}</p>
         </div>
       </div>

@@ -64,6 +64,12 @@ Os PDFs de identidade permanecem apenas na máquina de trabalho porque são gran
 
 A revisão visual automatizada no navegador não ficou disponível nesta sessão porque o controle do Chrome não conseguiu determinar a URL atual com confiança; a entrega não deve ser descrita como validada visualmente em desktop e mobile.
 
+## Revisão da cena de produtos na home
+
+A apresentação dos produtos agora ocupa a viewport inteira. A cena permanece fixa por cinco etapas de rolagem: cada etapa troca título, texto e imagem de fundo; o progresso acompanha a posição real da página. Não há avanço automático por tempo. As prévias e setas levam à posição correspondente da rolagem, e a última etapa libera a continuação da página. No mobile, a composição preserva a mesma lógica com título, ações e prévias dentro da tela.
+
+O build e a verificação de 34 assets passaram. A revisão no Chrome local confirmou a cena fixa e a mudança de etapas por rolagem em 1424 × 805 px; a captura em 390 × 844 px identificou um corte no título, corrigido e conferido em nova captura. Os PDFs de marca continuam fora do Git e do deploy.
+
 ## Próxima fase de conteúdo
 
 1. Trocar mocks por casos autorizados, com fotos, contexto e métricas comprováveis.
