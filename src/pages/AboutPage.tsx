@@ -155,7 +155,7 @@ export function AboutPage() {
       </section>
 
       {/* Quem Faz a Aegon (Time / Sócios) */}
-      <section className="page-section page-section--alt">
+      <section className="page-section page-section--alt about-team" id="equipe">
         <div className="container">
           <div className="section-header">
             <div>

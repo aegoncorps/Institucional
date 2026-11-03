@@ -40,7 +40,8 @@
   opacity: 0.035;
   pointer-events: none;
 }
-.spa-page:not(.contact-v5) .page-hero > .container {
+.spa-page:not(.contact-v5) .page-hero > .container,
+.contact-v5 .container {
   position: relative;
   z-index: 1;
   width: min(1440px, calc(100% - clamp(40px, 6vw, 112px)));
@@ -65,7 +66,12 @@
 .about-page .page-hero h1 em,
 .portfolio-page .page-hero h1 em,
 .insights-page .page-hero h1 em { color: var(--v5-blue); }
+.about-page .page-hero .eyebrow,
+.portfolio-page .page-hero .eyebrow,
+.insights-page .page-hero .eyebrow { color: var(--v5-blue); }
 .about-page .page-hero::after { color: var(--v5-blue); opacity: 0.06; }
+.about-page .page-hero .btn--ghost { background: transparent; border-color: rgba(0, 69, 186, 0.35); color: var(--v5-blue); backdrop-filter: none; }
+.about-page .page-hero .btn--ghost:hover { background: var(--v5-blue); border-color: var(--v5-blue); color: #ffffff; }
 .portfolio-page .page-hero::after { content: "01"; color: var(--v5-blue); opacity: 0.045; }
 .insights-page .page-hero::after { content: "?"; color: var(--v5-blue); opacity: 0.08; right: 0.1em; }
 .solutions-page .page-hero { background: var(--v5-blue); color: white; }
@@ -213,6 +219,58 @@
 .v5-demo__steps button.is-active { color: var(--v5-blue); padding-left: 16px; }
 .v5-demo__link { margin-top: 30px; align-self: start; color: var(--v5-blue); }
 
+/* Portfólio: hero editorial, filtros e indicadores com alto contraste sobre fundo claro */
+.portfolio-page .portfolio-hero__stat {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 69, 186, 0.18);
+  box-shadow: 0 8px 24px rgba(7, 24, 46, 0.04);
+}
+.portfolio-page .portfolio-hero__stat strong {
+  color: var(--v5-blue);
+  font-weight: 800;
+}
+.portfolio-page .portfolio-hero__stat span {
+  color: #3b506a;
+  font-weight: 600;
+}
+.portfolio-page .portfolio-toolbar {
+  border-top-color: rgba(0, 69, 186, 0.18);
+}
+.portfolio-page .filter-pill {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 69, 186, 0.2);
+  color: #07182e;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(7, 24, 46, 0.03);
+}
+.portfolio-page .filter-pill:hover {
+  background: #ffffff;
+  border-color: var(--v5-blue);
+  color: var(--v5-blue);
+}
+.portfolio-page .filter-pill.is-active {
+  background: var(--v5-blue);
+  border-color: var(--v5-blue);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 69, 186, 0.25);
+}
+.portfolio-page .portfolio-toolbar__views {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 69, 186, 0.2);
+  box-shadow: 0 4px 12px rgba(7, 24, 46, 0.03);
+}
+.portfolio-page .view-switch-btn {
+  color: #3b506a;
+}
+.portfolio-page .view-switch-btn:hover:not(.is-active) {
+  color: var(--v5-blue);
+}
+.portfolio-page .view-switch-btn.is-active {
+  background: var(--v5-blue);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 69, 186, 0.25);
+}
+
 /* Portfólio: capas e descoberta, com profundidade reservada ao case. */
 .portfolio-page .portfolio-editorial-grid { grid-template-columns: 1fr; gap: 0; }
 .portfolio-page .portfolio-showcase-card,
@@ -301,6 +359,16 @@
 .about-page .page-section--alt, .careers-page .page-section--alt { background: var(--v5-cream); color: var(--v5-ink); }
 .about-page .page-section--alt p, .careers-page .page-section--alt p { color: #33455c; }
 .about-page .page-section--alt .value-card, .careers-page .page-section--alt .value-card { border-color: rgba(0,69,186,.22); }
+.about-page .about-team .team-card { background: radial-gradient(circle at 100% 0, rgba(0, 94, 218, .32), transparent 46%), #081d3d; border-color: rgba(52, 117, 204, .48); box-shadow: 0 22px 42px rgba(3, 26, 69, .16); color: #f7faff; }
+.about-page .about-team .team-card h3 { color: #fff; }
+.about-page .about-team .team-card__area { color: var(--v5-sun); }
+.about-page .about-team .team-card__role { color: #b9cce8; }
+.about-page .about-team .team-card__bio { color: #dce7f7; }
+.about-page .about-team .team-card__avatar { background: linear-gradient(145deg, #1265e8, #003482); border-color: rgba(142, 188, 255, .5); }
+.about-page .about-team .deliverable-pill { background: rgba(155, 190, 241, .12); border-color: rgba(166, 204, 255, .38); color: #f2f7ff; }
+.about-page .about-team .section-header > .btn--ghost { background: transparent; border-color: #0045ba; color: #0045ba; backdrop-filter: none; }
+.about-page .about-team .section-header > .btn--ghost:hover,
+.about-page .about-team .section-header > .btn--ghost:focus-visible { background: #0045ba; border-color: #0045ba; color: #fff; }
 .about-page .trust-stats { border-top: 1px solid var(--stroke); border-bottom: 1px solid var(--stroke); }
 .about-page .trust-stat-card { background: transparent; border: 0; }
 .careers-page .job-card { border-radius: 0; border-width: 1px 0 0; background: transparent; }
@@ -309,9 +377,9 @@
 
 /* O contato é uma conversa com três atos, uma pergunta visível por vez. */
 .contact-v5 { padding-top: 0; background: #030812; color: white; }
-.contact-v5__stage { min-height: 100svh; position: relative; overflow: hidden; display: flex; align-items: center; padding-block: 145px 70px; }
+.contact-v5__stage { min-height: 100svh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding-block: 145px 70px; }
 .contact-v5__glow { position: absolute; width: 65vw; height: 65vw; right: -30vw; top: -20vw; border-radius: 50%; background: radial-gradient(circle, rgba(0,69,186,.27), transparent 65%); pointer-events: none; }
-.contact-v5__layout { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(50px, 9vw, 160px); align-items: center; position: relative; }
+.contact-v5__layout { width: min(1440px, calc(100% - clamp(40px, 6vw, 112px))); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(50px, 9vw, 160px); align-items: center; position: relative; }
 .contact-v5__intro h1 { max-width: 10ch; font-size: clamp(3.6rem, 6vw, 7.4rem); letter-spacing: -.07em; line-height: .96; margin-block: 35px 28px; }
 .contact-v5__intro h1 em { color: #4382ef; font-style: normal; }
 .contact-v5__intro > p:not(.eyebrow) { color: #a6b5ca; max-width: 35ch; font-size: clamp(1.08rem, 1.45vw, 1.35rem); }
@@ -395,7 +463,9 @@
   .products-showcase__controls button { width: 36px; height: 36px; }
   .products-showcase__count strong { font-size: 1.4rem; }
   .products-timed { height: 600svh; padding: 0; }
-  .spa-page:not(.contact-v5) .page-hero > .container { width: calc(100% - 32px); }
+  .spa-page:not(.contact-v5) .page-hero > .container,
+  .contact-v5 .container,
+  .contact-v5__layout { width: calc(100% - 32px); }
   .spa-page:not(.contact-v5) .page-hero { min-height: 66svh; padding-block: 95px 65px; }
   .spa-page:not(.contact-v5) .page-hero h1 { font-size: clamp(2.8rem, 12vw, 4.4rem); }
   .v5-bridge { min-height: 0; }
