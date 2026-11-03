@@ -307,6 +307,39 @@
 .products-timed__deck.is-paused .products-timed__timer { animation-play-state: paused; }
 @keyframes timed-card-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
+/* Cena principal + prévias: o item ativo vira o cenário, como no carrossel temporizado. */
+.products-showcase { position: relative; isolation: isolate; width: min(1440px, calc(100% - clamp(40px, 6vw, 112px))); height: min(650px, 72svh); min-height: 530px; overflow: hidden; border: 1px solid rgba(174, 206, 250, .22); box-shadow: 0 34px 90px rgba(0, 0, 0, .32); }
+.products-showcase__backdrop, .products-showcase__veil { position: absolute; inset: 0; }
+.products-showcase__backdrop { z-index: -2; background: #071936 center / cover no-repeat; animation: products-scene-in .75s cubic-bezier(.2,.8,.2,1) both; }
+.products-showcase__backdrop.is-custom { background: radial-gradient(circle at 70% 25%, rgba(29, 117, 245, .62), transparent 35%), linear-gradient(135deg, #003a99, #061630 66%); }
+.products-showcase__backdrop.is-custom::after { content: ""; position: absolute; inset: 0; background: url('/assets/brand/bg-pattern-on.png') center / 430px auto; opacity: .19; }
+.products-showcase__veil { z-index: -1; background: linear-gradient(90deg, rgba(2, 13, 35, .87) 0%, rgba(2, 13, 35, .57) 39%, rgba(2, 13, 35, .08) 76%, rgba(2, 13, 35, .45) 100%), linear-gradient(0deg, rgba(2, 13, 35, .55), transparent 45%); }
+.products-showcase__content { position: absolute; z-index: 2; left: clamp(28px, 5vw, 78px); top: 50%; width: min(34%, 420px); transform: translateY(-46%); animation: products-copy-in .58s .06s cubic-bezier(.2,.8,.2,1) both; }
+.products-showcase__content .eyebrow { margin-bottom: 28px; color: var(--v5-sun); }
+.products-showcase__kicker { display: block; margin-bottom: 12px; color: #d6e6fc; font-size: .8rem; font-weight: 800; }
+.products-showcase__content h2 { margin: 0; font-size: clamp(2.8rem, 4.6vw, 5.8rem); line-height: .88; letter-spacing: -.07em; text-wrap: balance; }
+.products-showcase__summary { max-width: 36ch; margin: 22px 0 0; color: #d6e2f2; font-size: 1rem; line-height: 1.55; }
+.products-showcase__actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 28px; }
+.products-showcase__rail { position: absolute; z-index: 3; left: 47%; right: -94px; bottom: 104px; display: flex; align-items: flex-end; gap: clamp(10px, 1.4vw, 20px); animation: products-rail-in .6s cubic-bezier(.2,.8,.2,1) both; }
+.products-showcase__card { position: relative; flex: 0 0 clamp(104px, 11vw, 155px); height: clamp(205px, 25vw, 300px); overflow: hidden; border: 0; border-radius: 12px; padding: 0; background: #09275d; color: white; text-align: left; box-shadow: 0 14px 24px rgba(0, 0, 0, .25); cursor: pointer; transform: translateY(0); transition: transform .3s ease, box-shadow .3s ease, filter .3s ease; }
+.products-showcase__card:hover, .products-showcase__card:focus-visible { transform: translateY(-12px); box-shadow: 0 25px 34px rgba(0, 0, 0, .38); outline: 2px solid var(--v5-sun); outline-offset: 3px; }
+.products-showcase__card img, .products-showcase__card-shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+.products-showcase__card img { object-fit: cover; transition: transform .5s ease; }.products-showcase__card:hover img { transform: scale(1.08); }
+.products-showcase__card-shade { background: linear-gradient(180deg, transparent 34%, rgba(1, 12, 34, .94) 100%); }
+.products-showcase__card-kicker, .products-showcase__card strong { position: absolute; z-index: 2; left: 13px; right: 11px; }
+.products-showcase__card-kicker { bottom: 41px; color: #e1ebfb; font-size: .58rem; font-weight: 800; line-height: 1.2; }
+.products-showcase__card strong { bottom: 13px; font-size: clamp(.7rem, .9vw, .9rem); line-height: 1.05; }
+.products-showcase__card.is-custom { background: linear-gradient(150deg, #0b4fb7, #04132d); }
+.products-showcase__card-pattern { position: absolute; inset: 0; color: rgba(255,255,255,.18); display: grid; place-items: center; }.products-showcase__card-pattern svg { width: 80%; }
+.products-showcase__footer { position: absolute; z-index: 4; right: clamp(28px, 5vw, 78px); bottom: 28px; left: clamp(28px, 5vw, 78px); display: grid; grid-template-columns: auto minmax(160px, 1fr) auto; align-items: center; gap: 22px; }
+.products-showcase__controls { display: flex; gap: 8px; }.products-showcase__controls button { display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid rgba(255,255,255,.45); border-radius: 50%; background: rgba(2, 14, 36, .2); color: white; }.products-showcase__controls button:first-child svg { transform: rotate(180deg); }.products-showcase__controls button:hover { background: rgba(255,255,255,.18); }
+.products-showcase__progress { height: 2px; overflow: hidden; background: rgba(255,255,255,.32); }.products-showcase__progress span { display: block; width: 100%; height: 100%; transform-origin: left; background: var(--v5-sun); animation: products-slide-progress 5.2s linear both; }.products-showcase__progress.is-paused span { animation-play-state: paused; }
+.products-showcase__count { margin: 0; color: #d9e7fb; font-size: .82rem; font-weight: 800; }.products-showcase__count strong { color: white; font-size: 1.7rem; letter-spacing: -.05em; }
+@keyframes products-scene-in { from { transform: scale(1.07); filter: brightness(.62) saturate(.75); opacity: .25; } to { transform: none; filter: none; opacity: 1; } }
+@keyframes products-copy-in { from { opacity: 0; transform: translateY(-40%); } to { opacity: 1; transform: translateY(-46%); } }
+@keyframes products-rail-in { from { opacity: 0; transform: translateX(70px); } to { opacity: 1; transform: none; } }
+@keyframes products-slide-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
 
 /* Grades institucionais com menos peso de cartão. */
 .about-page .value-card, .about-page .process-card, .careers-page .value-card,
@@ -373,6 +406,10 @@
 @keyframes v5-enter { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 900px) {
+  .products-showcase { width: calc(100% - 48px); height: 680px; }
+  .products-showcase__content { top: 35%; width: min(48%, 390px); }
+  .products-showcase__rail { left: 43%; right: -180px; bottom: 112px; }
+  .products-showcase__card { flex-basis: 136px; height: 250px; }
   .products-timed { min-height: 0; padding-block: 92px; }
   .products-timed__shell { width: calc(100% - 48px); grid-template-columns: 1fr; gap: 40px; }
   .products-timed__intro { min-height: 0; }
@@ -395,6 +432,18 @@
   .portfolio-page .portfolio-showcase-card:nth-child(even) .portfolio-showcase-card__media { order: 0; }
 }
 @media (max-width: 640px) {
+  .products-showcase { width: calc(100% - 32px); height: min(730px, 88svh); min-height: 600px; }
+  .products-showcase__veil { background: linear-gradient(180deg, rgba(2,13,35,.46), rgba(2,13,35,.86) 62%, #020d23 100%); }
+  .products-showcase__content { top: 42px; right: 24px; left: 24px; width: auto; transform: none; }
+  .products-showcase__content .eyebrow { margin-bottom: 16px; }
+  .products-showcase__content h2 { font-size: clamp(2.7rem, 11vw, 4rem); }
+  .products-showcase__summary { margin-top: 14px; font-size: .9rem; }
+  .products-showcase__actions { margin-top: 20px; }
+  .products-showcase__rail { right: 0; bottom: 102px; left: 24px; gap: 10px; overflow: hidden; }
+  .products-showcase__card { flex-basis: 116px; height: 210px; }
+  .products-showcase__footer { right: 24px; bottom: 22px; left: 24px; gap: 12px; grid-template-columns: auto minmax(80px, 1fr) auto; }
+  .products-showcase__controls button { width: 36px; height: 36px; }
+  .products-showcase__count strong { font-size: 1.4rem; }
   .products-timed { padding-block: 76px; }
   .products-timed__shell { width: calc(100% - 32px); gap: 30px; }
   .products-timed__intro h2 { font-size: clamp(2.8rem, 11vw, 4rem); }
